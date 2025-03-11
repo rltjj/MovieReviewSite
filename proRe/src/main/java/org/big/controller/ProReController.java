@@ -46,4 +46,19 @@ public class ProReController {
             return "thymeleaf/error"; // 예외 발생 시 에러 페이지로 이동
         }
     }
+    
+    @GetMapping("/movie/review/{id}")
+    public String reviewWrite(@PathVariable Long id, Model model) {
+    	try {
+            MovieDto movie = movieService.getMovieById(id);
+            if (movie == null) {
+                return "thymeleaf/error";
+            }
+            model.addAttribute("movie", movieService.getMovieById(id));
+            return "thymeleaf/writereview";
+        } catch (Exception e) {
+            e.printStackTrace(); 
+            return "thymeleaf/error"; 
+        }
+    }
 }

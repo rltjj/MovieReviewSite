@@ -86,8 +86,8 @@ a {
 
 /* 평균 점수의 스타일 */
 .average-rating {
-    font-size: 12px; /* 평균 값 크기 */
-    margin-left: 10px; /* 별과 숫자 사이에 간격 추가 */
-    color: #666; /* 평균 점수 색상 */
+    font-size: 12px;
+    margin-left: 10px; 
+    color: #666; 
 }
 

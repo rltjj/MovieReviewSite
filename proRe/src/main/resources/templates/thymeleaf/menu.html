@@ -6,8 +6,12 @@
   .navbar {
     display: flex;
     justify-content: space-between; 
-    padding: 10px 120px;
+    padding: 10px 240px;
     background-color: #333;
+    position: fixed;
+    top: 0; 
+    left: 0;
+    right: 0;
   }
   .navbar .left, .navbar .center, .navbar .right {
     display: flex;
@@ -20,6 +24,10 @@
   }
   .navbar a:hover {
     background-color: #555;
+  }
+  
+  body {
+    margin-top: 60px; /* 메뉴바 높이만큼 마진을 주어 겹치지 않게 함 */
   }
 </style>
 </head>
@@ -35,7 +43,7 @@
       <a href="#">마이페이지</a>
     </div>
     <div class="right">
-      <a href="#">로그인</a>
+      <a href="/login">로그인</a>
     </div>
   </div>
 </body>
