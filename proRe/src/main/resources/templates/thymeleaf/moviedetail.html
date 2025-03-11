@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<title>영화 리뷰 사이트</title>
+    <link rel="stylesheet" th:href="@{/css/detailstyle.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+	<div th:replace="~{thymeleaf/menu}"></div>
+	
+	<br>
+	
+    <div class="movie-detail">
+        <h2 th:text="${movie.title}"></h2>
+        <img th:src="@{/images/{poster}(poster=${movie.posterImageName})}" alt="영화 포스터">
+        <p>감독: <span th:text="${movie.director}"></span></p>
+        <p>장르: <span th:text="${movie.genre}"></span></p>
+        <p>개봉일: <span th:text="${movie.releaseDate}"></span></p>
+        <p>평균 평점: <span th:text="${movie.averageRating}"></span></p>
+    </div>
+	
+	<br>
+
+	<div th:replace="~{thymeleaf/footer}"></div>
+	
+</body>
+</html>
