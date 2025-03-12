@@ -6,4 +6,5 @@ import java.util.List;
 public interface MovieService {
     List<MovieDto> getAllMovies() throws Exception;
     MovieDto getMovieById(Long id) throws Exception;
+	List<MovieDto> getBookmarkedMoviesByUser(Long id);
 }

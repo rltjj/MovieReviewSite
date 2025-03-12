@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.big.mapper.ReviewMapper">
+
+    <!-- 사용자 ID에 해당하는 리뷰 목록을 조회하는 SQL -->
+    <select id="findReviewsByUser" resultType="org.big.dto.ReviewDto">
+    	<![CDATA[
+        	SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at, m.title AS movie_title
+        	FROM reviews r
+        	JOIN movies m ON r.movie_id = m.id
+        	WHERE r.user_id = #{userId}
+    	]]>
+	</select>
+
+
+    <!-- 리뷰 저장 SQL -->
+    <insert id="insertReview" parameterType="org.big.dto.ReviewDto">
+    	<![CDATA[
+        	INSERT INTO reviews (movie_id, user_id, rating, review_comment, created_at)
+        	VALUES (#{movieId}, #{userId}, #{rating}, #{reviewComment}, SYSDATE)
+    	]]>
+	</insert>
+
+</mapper>

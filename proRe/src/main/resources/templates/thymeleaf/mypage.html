@@ -1,20 +1,68 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-	<title>영화 리뷰 사이트</title>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
     <link rel="stylesheet" th:href="@{/css/mypagestyle.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-	<div th:replace="~{thymeleaf/menu}"></div>
-	
-	<br>
-	
-	
-	<br>
+    <div th:replace="~{thymeleaf/menu}"></div>
 
-	<div th:replace="~{thymeleaf/footer}"></div>
+    <h2>회원 정보</h2>
+    <table>
+        <tr>
+            <th>아이디</th>
+            <td th:text="${user.username}"></td>
+        </tr>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${user.email}"></td>
+        </tr>
+        <tr>
+            <th>가입일</th>
+            <td th:text="${user.createdAt}"></td>
+        </tr>
+    </table>
 
+    <form action="/mypage/deleteAccount" method="post">
+        <button type="submit">회원 탈퇴</button>
+    </form>
+
+    <h2>북마크한 영화</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>영화 제목</th>
+                <th>장르</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="movie : ${bookmarkedMovies}">
+                <td th:text="${movie.title}"></td>
+                <td th:text="${movie.genre}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>내가 쓴 리뷰</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>영화 제목</th>
+                <th>평점</th>
+                <th>리뷰 내용</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="review : ${myReviews}">
+                <td th:text="${review.movieTitle}"></td>
+                <td th:text="${review.rating}"></td>
+                <td th:text="${review.reviewComment}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{thymeleaf/footer}"></div>
 </body>
 </html>

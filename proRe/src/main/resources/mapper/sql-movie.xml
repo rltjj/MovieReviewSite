@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.big.mapper.MovieMapper">
+    
+    <!-- 모든 영화 조회 -->
+    <select id="getAllMovies" resultType="org.big.dto.MovieDto">
+        <![CDATA[
+            SELECT
+    			id,
+    			title,
+    			director,
+    			release_date,
+    			genre,
+    			poster_image_name,
+    			synopsis,
+    			ROUND(average_rating, 1) AS average_rating,
+    			created_at
+			FROM
+    			movies
+        ]]>
+    </select>
+    
+    <!-- 영화 아이디로 영화 조회 -->
+    <select id="findById" resultType="org.big.dto.MovieDto">
+        <![CDATA[
+            SELECT
+    			id,
+    			title,
+    			director,
+    			release_date,
+    			genre,
+    			poster_image_name,
+    			synopsis,
+    			ROUND(average_rating, 1) AS average_rating,
+    			created_at
+			FROM
+    			movies 
+    		WHERE 
+    			id = #{id}
+        ]]>
+    </select>
+    
+    <!-- 사용자가 북마크한 영화들 조회 -->
+    <select id="getBookmarkedMoviesByUser" resultType="org.big.dto.MovieDto">
+        <![CDATA[
+            SELECT m.id, m.title, m.genre, m.director, m.release_date, m.poster_image_name
+            FROM movies m
+            JOIN bookmarks b ON m.id = b.movie_id
+            WHERE b.user_id = #{userId}
+        ]]>
+    </select>
+    
+    <!-- 영화 정보 업데이트 -->
+	<update id="updateMovieCount" parameterType="org.big.dto.MovieDto">
+    	<![CDATA[
+        	UPDATE movies
+        	SET review_count = #{reviewCount},
+            	average_rating = #{averageRating}
+       		WHERE id = #{id}
+    	]]>
+	</update>
+    
+    
+</mapper>

@@ -8,4 +8,7 @@ public interface UserMapper {
     
     void insertUser(UserDto userDto);
     UserDto findByUsername(String username);
+	void updatePassword(String username, String encodedNewPassword);
+	void deleteUser(String username);
+	Long findUserIdByUsername(String username);
 }

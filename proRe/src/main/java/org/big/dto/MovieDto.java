@@ -14,6 +14,7 @@ public class MovieDto {
     private String posterImageName;
     private String synopsis;
     private Double averageRating;
+    private int reviewCount;
     private LocalDateTime createdAt; // 변경
     
  // 개봉일 포맷 메서드 추가
