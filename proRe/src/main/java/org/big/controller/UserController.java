@@ -6,6 +6,8 @@ import java.util.List;
 import org.big.dto.MovieDto;
 import org.big.dto.ReviewDto;
 import org.big.dto.UserDto;
+import org.big.mapper.UserMapper;
+import org.big.service.BookmarkService;
 import org.big.service.MovieService;
 import org.big.service.ReviewService;
 import org.big.service.UserService;
@@ -13,29 +15,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Controller
 public class UserController {
 
-    private final UserService userService;
-    private final MovieService movieService;
-    private final ReviewService reviewService;
-
+	@Autowired
+    private UserService userService;
     @Autowired
-    private AuthenticationManager authenticationManager;
-
+    private MovieService movieService;
     @Autowired
-    public UserController(UserService userService, MovieService movieService, ReviewService reviewService) {
-        this.userService = userService;
-        this.movieService = movieService;
-        this.reviewService = reviewService;
-    }
-
+    private ReviewService reviewService;
+    @Autowired
+    private BookmarkService bookmarkService;
+    
+    @Autowired
+    private UserMapper userMapper;
+    
     // 회원가입 페이지 요청
     @GetMapping("/signup")
     public String showSignUpForm() {
@@ -161,5 +164,97 @@ public class UserController {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return (userDetails != null) ? userDetails.getUsername() : null;
     }
+    
+    // 북마크 추가
+    @PostMapping("/movie/bookmark/{movieId}")
+    public String addBookmark(@PathVariable Long movieId, 
+                              @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();  // 로그인한 사용자의 username 가져오기
+        Long userId = userMapper.findUserIdByUsername(username);  // 올바른 메서드명 사용
+
+        bookmarkService.addBookmark(userId, movieId);
+
+        return "redirect:/movie/" + movieId;
+    }
+
+    // 북마크 삭제
+    @PostMapping("/movie/bookmark/remove")
+    public String removeBookmark(@RequestParam Long movieId, 
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();  // 로그인한 사용자의 username 가져오기
+        Long userId = userMapper.findUserIdByUsername(username);  // 올바른 메서드명 사용
+
+        bookmarkService.removeBookmark(userId, movieId);
+
+        return "redirect:/movie/" + movieId;
+    }
+    
+ // 북마크 삭제
+    @PostMapping("/movie/bookmark/removemypage")
+    public String removeBookmarkMypage(@RequestParam Long movieId, 
+                                 @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();  // 로그인한 사용자의 username 가져오기
+        Long userId = userMapper.findUserIdByUsername(username);  // 사용자 ID 조회
+
+        bookmarkService.removeBookmark(userId, movieId);
+
+        return "redirect:/mypage";  // 북마크 해제 후 마이페이지로 리디렉트
+    }
+    
+    // 리뷰 수정 페이지로 이동
+    @GetMapping("/review/edit/{reviewId}")
+    public String editReview(@PathVariable Long reviewId, Model model, 
+                             @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Long userId = userMapper.findUserIdByUsername(username);
+        
+        ReviewDto review = reviewService.getReviewById(reviewId);
+        
+        // 본인이 작성한 리뷰인지 검증
+        if (review == null || !review.getUserId().equals(userId)) {
+            return "redirect:/mypage"; // 권한 없으면 마이페이지로 이동
+        }
+
+        model.addAttribute("review", review);
+        return "thymeleaf/review-edit";
+    }
+    
+    // 리뷰 업데이트
+    @PostMapping("/review/update")
+    public String updateReview(@RequestParam Long reviewId, 
+                               @RequestParam int rating, 
+                               @RequestParam String reviewComment,
+                               @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Long userId = userMapper.findUserIdByUsername(username);
+
+        // 본인 리뷰인지 확인 후 업데이트 실행
+        ReviewDto review = reviewService.getReviewById(reviewId);
+        if (review == null || !review.getUserId().equals(userId)) {
+            return "redirect:/mypage";
+        }
+
+        reviewService.updateReview(reviewId, rating, reviewComment);
+        return "redirect:/mypage";
+    }
+
+    // 리뷰 삭제
+    @PostMapping("/review/delete")
+    public String deleteReview(@RequestParam Long reviewId, 
+                               @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Long userId = userMapper.findUserIdByUsername(username);
+
+        // 본인 리뷰인지 확인 후 삭제 실행
+        ReviewDto review = reviewService.getReviewById(reviewId);
+        if (review == null || !review.getUserId().equals(userId)) {
+            return "redirect:/mypage";
+        }
+
+        reviewService.deleteReview(reviewId);
+        return "redirect:/mypage";
+    }
+
+
 }
 

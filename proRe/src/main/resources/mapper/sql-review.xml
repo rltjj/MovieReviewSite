@@ -5,14 +5,13 @@
     <!-- 사용자 ID에 해당하는 리뷰 목록을 조회하는 SQL -->
     <select id="findReviewsByUser" resultType="org.big.dto.ReviewDto">
     	<![CDATA[
-        	SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at, m.title AS movie_title
+        	SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt, m.title AS movie_title
         	FROM reviews r
         	JOIN movies m ON r.movie_id = m.id
         	WHERE r.user_id = #{userId}
     	]]>
 	</select>
-
-
+		
     <!-- 리뷰 저장 SQL -->
     <insert id="insertReview" parameterType="org.big.dto.ReviewDto">
     	<![CDATA[
@@ -20,5 +19,52 @@
         	VALUES (#{movieId}, #{userId}, #{rating}, #{reviewComment}, SYSDATE)
     	]]>
 	</insert>
+	
+	<select id="getReviewById" parameterType="long" resultType="org.big.dto.ReviewDto">
+		<![CDATA[
+			SELECT * FROM reviews WHERE id = #{reviewId}
+	    ]]>
+	</select>
+	
+	<update id="updateReview">
+    	<![CDATA[
+        	UPDATE reviews 
+    		SET rating = #{rating}, review_comment = #{reviewComment}, created_at = SYSDATE
+    		WHERE id = #{reviewId}
+    	]]>
+	</update>
+	
+	<delete id="deleteReview">
+        <![CDATA[
+        	DELETE FROM reviews WHERE id = #{reviewId}
+        ]]>
+    </delete>
+    
+    <select id="findReviewsByMovie" resultMap="reviewResultMap">
+	    <![CDATA[
+	        SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt,
+	               m.title AS movie_title
+	        FROM reviews r
+	        JOIN movies m ON r.movie_id = m.id
+	        WHERE r.movie_id = #{id}
+	        ORDER BY r.created_at DESC
+	    ]]>
+	</select>
+	
+	<resultMap id="reviewResultMap" type="org.big.dto.ReviewDto">
+	    <id property="id" column="id"/>
+	    <result property="movieId" column="movie_id"/>
+	    <result property="userId" column="user_id"/>
+	    <result property="reviewComment" column="review_comment"/>
+	    <result property="rating" column="rating"/>
+	    <result property="reviewCreatedAt" column="created_at"/>
+	</resultMap>
+
+	<select id="countReviewsByMovie" parameterType="long" resultType="int">
+	    <![CDATA[
+	        SELECT COUNT(*) FROM reviews r
+	        WHERE r.movie_id = #{id}
+	    ]]>
+	</select>
 
 </mapper>

@@ -35,11 +35,11 @@
 
         	<!-- 버튼 컨테이너 -->
         	<div class="button-container">
-            	<form th:action="@{/movie/bookmark}" method="post">
-                	<input type="hidden" name="movieId" th:value="${movie.id}">
-                	<button type="submit" class="bookmark-btn">북마크</button>
-            	</form>
-            
+            	<form th:action="@{${isBookmarked} ? '/movie/bookmark/remove' : '/movie/bookmark/' + ${movie.id}}" method="post">
+				    <input type="hidden" name="movieId" th:value="${movie.id}">
+				    <button type="submit" class="bookmark-btn" th:text="${isBookmarked ? '북마크 해제' : '북마크'}"></button>
+				</form>
+
             	<form th:action="@{/movie/review/{id}(id=${movie.id})}" method="get">
                 	<button type="submit" class="review-btn">리뷰 작성</button>
             	</form>
@@ -51,9 +51,30 @@
     <br>
     
     <div class="review">
-    	
-    </div>
+	    <h3>리뷰 목록</h3>
+	    
+	    <div th:if="${#lists.isEmpty(movie.reviews)}">
+	        <p>아직 리뷰가 없습니다. 첫 리뷰를 작성해보세요!</p>
+	    </div>
 	
+	    <div th:each="review : ${movie.reviews}" class="review-item">
+		    <p><strong th:text="${review.username}"></strong> 님의 리뷰</p>
+		    <p th:text="${review.reviewComment}"></p>		    
+		    <!-- 별점 표시 -->
+		    <p>
+		        <span class="star-rating">
+		            <i class="fa fa-star" th:each="i : ${#numbers.sequence(1,5)}"
+		               th:classappend="${i <= review.rating ? 'fa-star' : 'fa-star-o'}"></i>
+		        </span>
+		        <span th:text="${review.rating}"></span>/5
+		    </p>
+		    <p th:text="${#dates.format(review.reviewCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
+		
+		    <hr>
+		</div>
+
+	</div>
+
 	<br>
 
 	<div th:replace="~{thymeleaf/footer}"></div>

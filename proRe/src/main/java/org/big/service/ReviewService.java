@@ -1,7 +1,12 @@
 package org.big.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.big.dto.MovieDto;
 import org.big.dto.ReviewDto;
 import org.big.mapper.ReviewMapper;
@@ -12,7 +17,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReviewService {
 
-	@Autowired
+    @Autowired
     private ReviewMapper reviewMapper;
 
     @Autowired
@@ -51,4 +56,20 @@ public class ReviewService {
         }
     }
 
+    public ReviewDto getReviewById(Long reviewId) {
+        return reviewMapper.getReviewById(reviewId);
+    }
+
+    public void updateReview(Long reviewId, int rating, String reviewComment) {
+        reviewMapper.updateReview(reviewId, rating, reviewComment);
+    }
+
+    public void deleteReview(Long reviewId) {
+        reviewMapper.deleteReview(reviewId);
+    }
+
+    // 리뷰 목록을 페이지네이션 없이 반환
+    public List<ReviewDto> getReviewsByMovie(Long id) {
+        return reviewMapper.findReviewsByMovie(id);
+    }
 }

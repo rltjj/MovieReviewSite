@@ -32,22 +32,20 @@
 </style>
 </head>
 <body>
-  <div class="navbar">
-    <div class="left">
-      <a href="/main">홈</a>
-    </div>
-    <div class="center">
-      <a href="#">영화 추가</a>
-      <a href="#">영화 수정</a>
-      <a href="#">영화 삭제</a>
-      <a href="/mypage">마이페이지</a>
-    </div>
-    <div class="right">
-    <a th:href="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}">로그아웃</a>
-    <a th:href="@{/login}" th:unless="${#authorization.expression('isAuthenticated()')}">로그인</a>
-</div>
+  	<div class="navbar">
+    	<div class="left">
+      		<a href="/main">홈</a>
+    	</div>
+    	<div class="center">
+      		<a href="/movies/add">영화 추가</a>
+      		<a href="/main?action=update">영화 수정/삭제</a>
+	      	<a href="/mypage">마이페이지</a>
+	    </div>
+	    <div class="right">
+	    	<a th:href="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}">로그아웃</a>
+	    	<a th:href="@{/login}" th:unless="${#authorization.expression('isAuthenticated()')}">로그인</a>
+		</div>
 
-
-  </div>
+  	</div>
 </body>
 </html>

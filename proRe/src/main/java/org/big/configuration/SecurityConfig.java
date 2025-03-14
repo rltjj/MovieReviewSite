@@ -23,7 +23,7 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
 	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/mypage", "/movie/review/*").authenticated() // 로그인해야 접근 가능
+	            .requestMatchers("/mypage", "/movie/review/*", "/movie/bookmark/*").authenticated() // 로그인해야 접근 가능
 	            .anyRequest().permitAll() // 나머지는 모두 접근 허용
 	        )
 	        .formLogin(login -> login

@@ -11,6 +11,30 @@
 	
 	<br>
 	
+	<h2>영화 추가</h2>
+    <form th:action="@{/movies/add}" method="post" enctype="multipart/form-data">
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required><br>
+        
+        <label for="director">감독:</label>
+        <input type="text" id="director" name="director" required><br>
+        
+        <label for="genre">장르:</label>
+        <input type="text" id="genre" name="genre" required><br>
+        
+        <label for="releaseDate">개봉일:</label>
+        <input type="date" name="releaseDate" required><br>
+        
+        <label for="poster">포스터 이미지:</label>
+		<input type="file" id="poster" name="posterFile" accept="image/*"><br>
+
+        
+        <label for="synopsis">줄거리:</label>
+        <textarea id="synopsis" name="synopsis" required></textarea><br>
+        
+        <button type="submit">추가</button>
+    </form>
+    <a href="/">메인으로 돌아가기</a>
 	
 	<br>
 

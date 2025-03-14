@@ -35,12 +35,19 @@
             <tr>
                 <th>영화 제목</th>
                 <th>장르</th>
+                <th> </th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="movie : ${bookmarkedMovies}">
                 <td th:text="${movie.title}"></td>
                 <td th:text="${movie.genre}"></td>
+                <td>
+                <form action="/movie/bookmark/removemypage" method="post">
+                    <input type="hidden" name="movieId" th:value="${movie.id}">
+                    <button type="submit">해제</button>
+                </form>
+            </td>
             </tr>
         </tbody>
     </table>
@@ -52,6 +59,9 @@
                 <th>영화 제목</th>
                 <th>평점</th>
                 <th>리뷰 내용</th>
+                <th>리뷰 작성일</th>
+                <th>수정</th>
+            	<th>삭제</th>
             </tr>
         </thead>
         <tbody>
@@ -59,6 +69,16 @@
                 <td th:text="${review.movieTitle}"></td>
                 <td th:text="${review.rating}"></td>
                 <td th:text="${review.reviewComment}"></td>
+                <td th:text="${#dates.format(review.reviewCreatedAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <td>
+	                <a th:href="@{/review/edit/{reviewId}(reviewId=${review.id})}">수정</a>
+	            </td>
+	            <td>
+	                <form action="/review/delete" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+	                    <input type="hidden" name="reviewId" th:value="${review.id}">
+	                    <button type="submit">삭제</button>
+	                </form>
+	            </td>
             </tr>
         </tbody>
     </table>
