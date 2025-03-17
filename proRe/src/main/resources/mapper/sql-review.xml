@@ -20,9 +20,13 @@
     	]]>
 	</insert>
 	
-	<select id="getReviewById" parameterType="long" resultType="org.big.dto.ReviewDto">
-		<![CDATA[
-			SELECT * FROM reviews WHERE id = #{reviewId}
+	<select id="getReviewById" resultType="org.big.dto.ReviewDto">
+	    <![CDATA[
+	        SELECT r.id, r.user_id, r.rating, r.review_comment AS reviewComment, 
+	               r.movie_id AS movieId, m.title AS movieTitle
+	        FROM reviews r
+	        JOIN movies m ON r.movie_id = m.id
+	        WHERE r.id = #{reviewId}
 	    ]]>
 	</select>
 	
@@ -39,6 +43,24 @@
         	DELETE FROM reviews WHERE id = #{reviewId}
         ]]>
     </delete>
+    
+    <!-- 별점 -->
+    <update id="updateMovieAverageRating" parameterType="long">
+	    <![CDATA[
+	        UPDATE movies
+	        SET average_rating = (
+	            SELECT ROUND(AVG(rating), 1)
+	            FROM reviews
+	            WHERE movie_id = #{movieId}
+	        ),
+	        review_count = (
+	            SELECT COUNT(*)
+	            FROM reviews
+	            WHERE movie_id = #{movieId}
+	        )
+	        WHERE id = #{movieId}
+	    ]]>
+	</update>
     
     <select id="findReviewsByMovie" resultMap="reviewResultMap">
 	    <![CDATA[

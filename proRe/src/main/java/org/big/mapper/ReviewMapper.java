@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.big.dto.ReviewDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 
 @Mapper
 public interface ReviewMapper {
@@ -17,14 +18,20 @@ public interface ReviewMapper {
 
 	void insertReview(ReviewDto review);
 
-	void updateReview(Long reviewId, int rating, String reviewComment);
+	void updateReview(@Param("reviewId") Long reviewId, 
+            @Param("rating") double rating, 
+            @Param("reviewComment") String reviewComment);
 
-	void deleteReview(Long reviewId);
+	ReviewDto getReviewById(@Param("reviewId") int reviewId);
+
+	void deleteReview(@Param("reviewId") Long reviewId, @Param("movieId") Long movieId);
 
 	public Page<ReviewDto> findReviewsByMovie(Long id, Pageable pageable);
 
 	List<ReviewDto> findReviewsByMovie(Long id);
 
 	int countReviewsByMovie(Long movieId);
+
+	void updateMovieAverageRating(Long movieId);
 
 }

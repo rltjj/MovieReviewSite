@@ -35,13 +35,10 @@ public class MovieController {
 
 	@Autowired
 	private MovieService movieService;
-
 	@Autowired
 	private ReviewService reviewService;
-
 	@Autowired
 	private UserService userService;
-
 	@Autowired
 	private BookmarkService bookmarkService;
 

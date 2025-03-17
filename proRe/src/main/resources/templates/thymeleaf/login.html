@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 	<title>영화 리뷰 사이트</title>
     <link rel="stylesheet" th:href="@{/css/userstyle.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -17,16 +19,16 @@
         <div>
             <label for="username">아이디</label>
             <input type="text" id="username" name="username" required />
-        </div>
+        </div><br>
         <div>
             <label for="password">비밀번호</label>
             <input type="password" id="password" name="password" required />
-        </div>
+        </div><br>
         <button type="submit">로그인</button>
     </form>
     
     <div class="signup">
-      <a href="/signup">회원가입하러 가기</a>
+    	<span>회원이 아니신가요? </span> <a href="/signup">회원가입하러 가기</a>
     </div>
 
     <br>

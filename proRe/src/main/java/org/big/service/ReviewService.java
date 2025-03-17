@@ -40,32 +40,27 @@ public class ReviewService {
 
         // 영화 정보 업데이트
         MovieDto movie = movieMapper.findById(movieId);
-        if (movie != null) {
-            // 기존 리뷰 개수와 평균 평점
-            int currentReviewCount = movie.getReviewCount();
-            double currentAverageRating = movie.getAverageRating();
-
-            // 새로운 리뷰 개수와 평균 평점 계산
-            int newReviewCount = currentReviewCount + 1;
-            double newAverageRating = ((currentAverageRating * currentReviewCount) + rating) / newReviewCount;
-
-            // 영화 테이블 업데이트
-            movie.setReviewCount(newReviewCount);
-            movie.setAverageRating(newAverageRating);
-            movieMapper.updateMovieCount(movie);
-        }
+        reviewMapper.updateMovieAverageRating(movieId);
     }
 
     public ReviewDto getReviewById(Long reviewId) {
         return reviewMapper.getReviewById(reviewId);
     }
-
-    public void updateReview(Long reviewId, int rating, String reviewComment) {
-        reviewMapper.updateReview(reviewId, rating, reviewComment);
+    
+    public void updateReview(Long reviewId, Long movieId, int rating, String reviewComment) {
+    	reviewMapper.updateReview(reviewId, rating, reviewComment);
+    	MovieDto movie = movieMapper.findById(movieId);
+        reviewMapper.updateMovieAverageRating(movieId);
+    }
+    
+    public ReviewDto getReviewById(int reviewId) {
+        return reviewMapper.getReviewById(reviewId);
     }
 
-    public void deleteReview(Long reviewId) {
-        reviewMapper.deleteReview(reviewId);
+    public void deleteReview(Long reviewId, Long movieId) {
+    	reviewMapper.deleteReview(reviewId, movieId); 
+        MovieDto movie = movieMapper.findById(movieId);
+        reviewMapper.updateMovieAverageRating(movieId);
     }
 
     // 리뷰 목록을 페이지네이션 없이 반환

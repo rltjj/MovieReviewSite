@@ -35,7 +35,6 @@ public class UserController {
     private ReviewService reviewService;
     @Autowired
     private BookmarkService bookmarkService;
-    
     @Autowired
     private UserMapper userMapper;
     
@@ -224,19 +223,28 @@ public class UserController {
     public String updateReview(@RequestParam Long reviewId, 
                                @RequestParam int rating, 
                                @RequestParam String reviewComment,
-                               @AuthenticationPrincipal UserDetails userDetails) {
+                               @AuthenticationPrincipal UserDetails userDetails,
+                               Model model) {
         String username = userDetails.getUsername();
         Long userId = userMapper.findUserIdByUsername(username);
 
-        // 본인 리뷰인지 확인 후 업데이트 실행
+        // 본인 리뷰인지 확인
         ReviewDto review = reviewService.getReviewById(reviewId);
         if (review == null || !review.getUserId().equals(userId)) {
             return "redirect:/mypage";
         }
 
-        reviewService.updateReview(reviewId, rating, reviewComment);
+        // 리뷰 업데이트
+        Long movieId = review.getMovieId(); 
+        reviewService.updateReview(reviewId, movieId, rating, reviewComment);
+
+        // 영화 제목 가져오기
+        String movieTitle = review.getMovieTitle();
+        model.addAttribute("movieTitle", movieTitle);
+
         return "redirect:/mypage";
     }
+
 
     // 리뷰 삭제
     @PostMapping("/review/delete")
@@ -251,7 +259,8 @@ public class UserController {
             return "redirect:/mypage";
         }
 
-        reviewService.deleteReview(reviewId);
+        Long movieId = review.getMovieId(); 
+        reviewService.deleteReview(reviewId, movieId);
         return "redirect:/mypage";
     }
 

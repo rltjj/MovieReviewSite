@@ -13,6 +13,10 @@ h2 {
     font-size: 25px;
     margin-bottom: 15px;
     padding-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+    display: inline-block;
+    width: 100%;
+    max-width: 500px;
     text-align: center;
 }
 
@@ -45,6 +49,12 @@ input, textarea {
     font-size: 14px;
 }
 
+/* 파일 업로드 필드 */
+input[type="file"] {
+    border: none;
+    padding: 5px;
+}
+
 /* 텍스트 영역 */
 textarea {
     height: 80px;
@@ -66,20 +76,14 @@ button:hover {
     background-color: gray;
 }
 
-.signup {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 14px;
-    display: flex; 
-    justify-content: center;
-    gap: 5px; 
-}
-
-.signup a {
-    color: #222;
+/* 메인으로 돌아가기 링크 */
+a {
+    display: block;
     text-decoration: none;
+    color: gray;
 }
 
-.signup a:hover {
-    text-decoration: underline;
+a:hover {
+    color: graytext;
 }
+

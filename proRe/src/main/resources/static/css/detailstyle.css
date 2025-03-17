@@ -127,3 +127,60 @@
 }
 
 
+/* 리뷰 목록 스타일 */
+.review {
+    margin: 40px 160px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 리뷰 항목 */
+.review-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* 리뷰 사용자 */
+.review-item strong {
+    font-size: 20px;
+    color: #333;
+}
+
+/* 리뷰 텍스트 */
+.review-item p {
+    font-size: 16px;
+    color: #444;
+    margin: 5px 0;
+}
+
+/* 리뷰 작성 날짜 */
+.review-item .review-date {
+    font-size: 14px;
+    color: #777;
+    text-align: right;
+    margin-top: 5px;
+}
+
+/* 리뷰 목록 내 별점 크기 조절 */
+.review-item .star-rating {
+    font-size: 18px; /* 작은 크기로 조정 */
+    margin-top: 5px;
+}
+
+/* 노란색 별 */
+.review-item .star-rating .fa-star {
+    color: gold;
+}
+
+/* 빈 회색 별 */
+.review-item .star-rating .fa-star-o {
+    color: lightgray;
+}
+
+

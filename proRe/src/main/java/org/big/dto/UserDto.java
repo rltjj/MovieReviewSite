@@ -1,5 +1,7 @@
 package org.big.dto;
 
+import java.util.Date;
+
 import lombok.Data;
 
 @Data
@@ -8,7 +10,7 @@ public class UserDto {
     private String username;
     private String password;
     private String email;
-    private String createdAt;
+    private Date createdAt;
     
     // 비밀번호 변경 필드 추가
     private String oldPassword;

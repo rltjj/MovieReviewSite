@@ -3,36 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>영화 수정</title>
-    <link rel="stylesheet" th:href="@{/css/mainstyle.css}">
+    <link rel="stylesheet" th:href="@{/css/addstyle.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
 </head>
 <body>
     <div th:replace="~{thymeleaf/menu}"></div>
+    
+    <br>
 
     <h2>영화 수정</h2>
 
     <!-- 영화 수정 폼 -->
 	<form th:action="@{/movies/update/{id}(id=${movie.id})}" method="post" enctype="multipart/form-data">
-	    <label for="title">영화 제목</label>
-	    <input type="text" name="title" th:value="${movie.title}" required />
+	    <label for="title">제목</label>
+	    <input type="text" name="title" th:value="${movie.title}" required /><br>
 	
 	    <label for="director">감독</label>
-	    <input type="text" name="director" th:value="${movie.director}" required />
+	    <input type="text" name="director" th:value="${movie.director}" required /><br>
 	
 	    <label for="releaseDate">개봉일</label>
-	    <input type="date" name="releaseDate" th:value="${movie.releaseDate}" required />
+	    <input type="date" name="releaseDate" th:value="${movie.releaseDate}" required /><br>
 	
 	    <label for="genre">장르</label>
-	    <input type="text" name="genre" th:value="${movie.genre}" required />
+	    <input type="text" name="genre" th:value="${movie.genre}" required /><br>
 	
 	    <label for="synopsis">줄거리</label>
-	    <textarea name="synopsis" th:text="${movie.synopsis}"></textarea>
+	    <textarea name="synopsis" th:text="${movie.synopsis}"></textarea><br>
 	
 	    <label for="posterFile">새로운 포스터 파일</label>
-	    <input type="file" name="posterFile" />
+	    <input type="file" name="posterFile" /><br>
 	
 	    <button type="submit">영화 수정</button>
 	</form>
 
+	<br>
 
     <div th:replace="~{thymeleaf/footer}"></div>
 </body>
