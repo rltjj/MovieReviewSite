@@ -20,6 +20,12 @@
         	<h2 th:text="${movie.title}"></h2>
         	<p>감독 : <span th:text="${movie.director}"></span></p>
         	<p>장르 : <span th:text="${movie.genre}"></span></p>
+        	<p>국가 : 
+			    <span th:switch="${movie.isDomestic}">
+			        <span th:case="'Y'">국내</span>
+			        <span th:case="'N'">해외 - <span th:text="${movie.country}"></span></span>
+			    </span>
+			</p>
         	<p>개봉일 : <span th:text="${movie.formattedReleaseDate}"></span></p>
         	<p>줄거리 : <span th:text="${movie.synopsis}"></span></p>
         	
@@ -53,7 +59,7 @@
     <br>
     
     <div class="review">
-	    <h2>리뷰 목록</h2>
+	    <h2>리뷰 목록 &nbsp;<span th:text="${#lists.size(movie.reviews)}"/>건</h2>
 	    
 	    <div th:if="${#lists.isEmpty(movie.reviews)}">
 	        <p>아직 리뷰가 없습니다. 첫 리뷰를 작성해보세요!</p>

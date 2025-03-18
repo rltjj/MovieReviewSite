@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.big.mapper.MovieMapper">
+    
+    <!-- 모든 영화 조회 -->
+    <select id="getAllMovies" resultType="org.big.dto.MovieDto">
+        <![CDATA[
+            SELECT
+    			id,
+    			title,
+    			director,
+    			release_date,
+    			genre,
+    			poster_image_name,
+    			synopsis,
+    			ROUND(average_rating, 1) AS average_rating
+			FROM
+    			movies
+    		ORDER BY id
+        ]]>
+    </select>
+    
+    <!-- 페이징된 영화 목록 조회 -->
+	<select id="getAllMoviesWithPaging" resultType="org.big.dto.MovieDto">
+	    <![CDATA[
+	        SELECT *
+	        FROM movies m
+	        ORDER BY m.id
+	        OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+	    ]]>
+	</select>
+	
+    <!-- 영화 아이디로 영화 조회 -->
+    <select id="findById" resultMap="movieWithReviewsMap">
+	    <![CDATA[
+	        SELECT
+	            m.id AS movie_id,
+	            m.title,
+	            m.director,
+	            m.release_date,
+	            m.genre,
+	            m.poster_image_name,
+	            m.synopsis,
+	            ROUND(m.average_rating, 1) AS average_rating,
+	            r.id AS review_id,
+	            u.username,
+	            r.review_comment,
+	            r.rating,
+	            r.created_at
+	        FROM
+	            movies m
+	        LEFT JOIN
+	            reviews r ON m.id = r.movie_id
+	        LEFT JOIN
+	            users u ON r.user_id = u.id
+	        WHERE
+	            m.id = #{id}
+	        ORDER BY
+    			r.id ASC
+	    ]]>
+	</select>
+	
+	<resultMap id="movieWithReviewsMap" type="org.big.dto.MovieDto">
+	    <id property="id" column="movie_id"/>
+	    <result property="title" column="title"/>
+	    <result property="director" column="director"/>
+	    <result property="genre" column="genre"/>
+	    <result property="releaseDate" column="release_date"/>
+	    <result property="posterImageName" column="poster_image_name"/>
+	    <result property="synopsis" column="synopsis"/>
+	    <result property="averageRating" column="average_rating"/>
+	    
+	    <!-- 리뷰 리스트 매핑 -->
+	    <collection property="reviews" ofType="org.big.dto.ReviewDto">
+	        <id property="id" column="review_id"/>
+	        <result property="username" column="username"/>
+	        <result property="reviewComment" column="review_comment"/>
+	        <result property="rating" column="rating"/>
+	        <result property="reviewCreatedAt" column="created_at"/>
+	    </collection>
+	</resultMap>
+	
+    <!-- 사용자가 북마크한 영화들 조회 -->
+    <select id="getBookmarkedMoviesByUser" resultType="org.big.dto.MovieDto">
+        <![CDATA[
+            SELECT m.id, m.title, m.genre, m.director, m.release_date, m.poster_image_name
+            FROM movies m
+            JOIN bookmarks b ON m.id = b.movie_id
+            WHERE b.user_id = #{userId}
+        ]]>
+    </select>
+    
+    <!-- 영화 정보 업데이트 -->
+	<update id="updateMovieCount" parameterType="org.big.dto.MovieDto">
+    	<![CDATA[
+        	UPDATE movies
+        	SET review_count = #{reviewCount},
+            	average_rating = #{averageRating}
+       		WHERE id = #{id}
+    	]]>
+	</update>
+	
+	<!-- 영화 추가 -->
+    <insert id="insertMovie" parameterType="org.big.dto.MovieDto">
+    	<![CDATA[
+        	INSERT INTO movies (title, director, genre, release_date, poster_image_name, synopsis, average_rating)
+		    VALUES (#{title}, #{director}, #{genre}, #{releaseDate}, 
+		            #{posterImageName}, #{synopsis}, 0)
+    	]]>
+	</insert>
+	
+	<!-- 영화 정보 수정 -->
+	<update id="updateMovie" parameterType="org.big.dto.MovieDto">
+	    <![CDATA[
+	        UPDATE movies
+	        SET title = #{title},
+	            director = #{director},
+	            release_date = #{releaseDate},
+	            genre = #{genre},
+	            synopsis = #{synopsis},
+	            poster_image_name = #{posterImageName}
+	        WHERE id = #{id}
+	    ]]>
+	</update>
+
+    <delete id="deleteMovie">
+        <![CDATA[
+        DELETE FROM movies
+        WHERE id = #{id}
+        ]]>
+    </delete>
+    
+    <!-- 리뷰 목록 조회 (페이징 적용) -->
+	<select id="getReviewsByMovieId" resultType="org.big.dto.ReviewDto">
+	    <![CDATA[
+	    SELECT r.id AS review_id, u.username, r.review_comment, r.rating, r.created_at
+	    FROM reviews r
+	    JOIN users u ON r.user_id = u.id
+	    WHERE r.movie_id = #{movieId}
+	    ORDER BY r.created_at DESC
+	    OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+	    ]]>
+	</select>
+</mapper>
+

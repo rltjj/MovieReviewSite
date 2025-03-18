@@ -39,9 +39,9 @@
     	<div class="center">
       		<a href="/movies/add">영화 추가</a>
       		<a href="/main?action=update">영화 수정/삭제</a>
+	      	<a href="/mypage">마이페이지</a>
 	    </div>
 	    <div class="right">
-	    	<a href="/mypage">마이페이지</a>
 	    	<a th:href="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}">로그아웃</a>
 	    	<a th:href="@{/login}" th:unless="${#authorization.expression('isAuthenticated()')}">로그인</a>
 		</div>

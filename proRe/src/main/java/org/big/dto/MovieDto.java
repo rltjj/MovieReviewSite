@@ -18,6 +18,8 @@ public class MovieDto {
     private String synopsis;
     private Double averageRating;
     private int reviewCount;
+    private char isDomestic;
+    private String country;
     
     private List<ReviewDto> reviews;
     

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.big.mapper.UserMapper">
+
+    <!-- 회원 가입을 위한 SQL -->
+    <insert id="insertUser">
+        <![CDATA[
+            INSERT INTO users (username, password, email)
+            VALUES (#{username}, #{password}, #{email})
+        ]]>
+    </insert>
+
+    <!-- 사용자 정보 조회 -->
+    <select id="findByUsername" resultType="org.big.dto.UserDto">
+        <![CDATA[
+            SELECT * FROM users WHERE username = #{username}
+        ]]>
+    </select>
+    
+    <select id="findUserIdByUsername" resultType="java.lang.Long">
+        <![CDATA[
+            SELECT id FROM users WHERE username = #{username}
+        ]]>
+    </select>
+    
+    <!-- 사용자 비밀번호 업데이트 -->
+    <update id="updatePassword">
+        <![CDATA[
+            UPDATE users
+            SET password = #{password}
+            WHERE username = #{username}
+        ]]>
+    </update>
+
+    <!-- 사용자 삭제 -->
+    <delete id="deleteUser">
+        <![CDATA[
+            DELETE FROM users WHERE username = #{username}
+        ]]>
+    </delete>
+
+</mapper>

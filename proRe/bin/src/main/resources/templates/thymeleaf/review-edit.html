@@ -19,12 +19,12 @@
 		<input type="hidden" name="reviewId" th:value="${review.id}">
 	    
 	    <label>평점 <span> ( 0부터 5까지의 정수로 입력하세요. )</span></label>
-	    <input type="number" name="rating" min="1" max="5" th:value="${review.rating}" required>
+	    <input type="number" name="rating" min="1" max="5" th:value="${review.rating}">
 	    
 	    <br>
 	    
 	    <label>리뷰</label>
-	    <textarea name="reviewComment" th:text="${review.reviewComment}"  rows="4" cols="50" required></textarea>
+	    <textarea name="reviewComment" th:text="${review.reviewComment}"  rows="4" cols="50"></textarea>
 	    
 	    <br>
 	    

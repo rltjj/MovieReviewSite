@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+	<title>영화 리뷰 사이트</title>
+    <link rel="stylesheet" th:href="@{/css/detailstyle.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+	<div th:replace="~{thymeleaf/menu}"></div>
+	
+	<br>
+	
+    <div class="movie-detail">
+    	<img th:src="@{/images/{poster}(poster=${movie.posterImageName})}" alt="영화 포스터" class="movie-poster">
+    
+    	<div class="movie-info">
+        	<h2 th:text="${movie.title}"></h2>
+        	<p>감독 : <span th:text="${movie.director}"></span></p>
+        	<p>장르 : <span th:text="${movie.genre}"></span></p>
+        	<p>개봉일 : <span th:text="${movie.formattedReleaseDate}"></span></p>
+        	<p>줄거리 : <span th:text="${movie.synopsis}"></span></p>
+        	
+        	<br>
+        	
+        	<p><span class="star-rating-p">평균 별점 : </span>
+            	<span class="star-rating" th:attr="data-rating=${movie.averageRating != null ? movie.averageRating : 0}">
+                	<i class="fa fa-star" th:each="i : ${#numbers.sequence(1,5)}"
+                    	th:classappend="${i <= movie.averageRating ? 'fa-star' : 'fa-star-o'}"></i>
+            		</span>
+            	<span class="average-rating" th:text="${movie.averageRating != null ? movie.averageRating : 0}"></span>
+        	</p>
+        	
+        	<br><br><br>
+
+        	<!-- 버튼 컨테이너 -->
+        	<div class="button-container">
+            	<form th:action="@{${isBookmarked} ? '/movie/bookmark/remove' : '/movie/bookmark/' + ${movie.id}}" method="post">
+				    <input type="hidden" name="movieId" th:value="${movie.id}">
+				    <button type="submit" class="bookmark-btn" th:text="${isBookmarked ? '북마크 해제' : '북마크'}"></button>
+				</form>
+
+            	<form th:action="@{/movie/review/{id}(id=${movie.id})}" method="get">
+                	<button type="submit" class="review-btn">리뷰 작성</button>
+            	</form>
+        	</div>
+    	</div>
+	</div>
+
+    
+    <br>
+    
+    <div class="review">
+	    <h2>리뷰 목록</h2>
+	    
+	    <div th:if="${#lists.isEmpty(movie.reviews)}">
+	        <p>아직 리뷰가 없습니다. 첫 리뷰를 작성해보세요!</p>
+	    </div>
+	
+	    <div th:each="review : ${movie.reviews}" class="review-item">
+		    <p><strong th:text="${review.username}"></strong> 님의 리뷰</p>
+		    <p th:text="${review.reviewComment}"></p>		    
+		    <!-- 별점 표시 -->
+		    <p>
+		        <span class="star-rating">
+		            <i class="fa fa-star" th:each="i : ${#numbers.sequence(1,5)}"
+		               th:classappend="${i <= review.rating ? 'fa-star' : 'fa-star-o'}"></i>
+		        </span>
+		        <span th:text="${review.rating}"></span>/5
+		    </p>
+		    <p th:text="${#dates.format(review.reviewCreatedAt, 'yyyy-MM-dd HH:mm')}"></p>
+		
+		</div>
+
+	</div>
+
+	<br>
+
+	<div th:replace="~{thymeleaf/footer}"></div>
+	
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+    		let poster = document.querySelector(".movie-poster");
+    		let movieInfo = document.querySelector(".movie-info");
+
+    		if (poster && movieInfo) {
+       	 		movieInfo.style.minHeight = poster.clientHeight + "px"; // 포스터 높이에 맞춤
+    		}
+		});
+	</script>
+
+</body>
+</html>

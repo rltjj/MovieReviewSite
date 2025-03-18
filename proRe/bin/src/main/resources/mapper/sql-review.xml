@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.big.mapper.ReviewMapper">
+
+    <!-- 사용자 ID에 해당하는 리뷰 목록을 조회하는 SQL -->
+    <select id="findReviewsByUser" resultType="org.big.dto.ReviewDto">
+    	<![CDATA[
+        	SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt, m.title AS movie_title
+        	FROM reviews r
+        	JOIN movies m ON r.movie_id = m.id
+        	WHERE r.user_id = #{userId}
+    	]]>
+	</select>
+		
+    <!-- 리뷰 저장 SQL -->
+    <insert id="insertReview" parameterType="org.big.dto.ReviewDto">
+    	<![CDATA[
+        	INSERT INTO reviews (movie_id, user_id, rating, review_comment, created_at)
+        	VALUES (#{movieId}, #{userId}, #{rating}, #{reviewComment}, SYSDATE)
+    	]]>
+	</insert>
+	
+	<select id="getReviewById" resultType="org.big.dto.ReviewDto">
+	    <![CDATA[
+	        SELECT r.id, r.user_id, r.rating, r.review_comment AS reviewComment, 
+	               r.movie_id AS movieId, m.title AS movieTitle
+	        FROM reviews r
+	        JOIN movies m ON r.movie_id = m.id
+	        WHERE r.id = #{reviewId}
+	    ]]>
+	</select>
+	
+	<update id="updateReview">
+    	<![CDATA[
+        	UPDATE reviews 
+    		SET rating = #{rating}, review_comment = #{reviewComment}, created_at = SYSDATE
+    		WHERE id = #{reviewId}
+    	]]>
+	</update>
+	
+	<delete id="deleteReview">
+        <![CDATA[
+        	DELETE FROM reviews WHERE id = #{reviewId}
+        ]]>
+    </delete>
+    
+    <!-- 별점 -->
+    <update id="updateMovieAverageRating" parameterType="long">
+	    <![CDATA[
+	        UPDATE movies
+	        SET average_rating = (
+	            SELECT ROUND(AVG(rating), 1)
+	            FROM reviews
+	            WHERE movie_id = #{movieId}
+	        ),
+	        review_count = (
+	            SELECT COUNT(*)
+	            FROM reviews
+	            WHERE movie_id = #{movieId}
+	        )
+	        WHERE id = #{movieId}
+	    ]]>
+	</update>
+    
+    <select id="findReviewsByMovie" resultMap="reviewResultMap">
+	    <![CDATA[
+	        SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt,
+	               m.title AS movie_title
+	        FROM reviews r
+	        JOIN movies m ON r.movie_id = m.id
+	        WHERE r.movie_id = #{id}
+	        ORDER BY r.created_at DESC
+	    ]]>
+	</select>
+	
+	<resultMap id="reviewResultMap" type="org.big.dto.ReviewDto">
+	    <id property="id" column="id"/>
+	    <result property="movieId" column="movie_id"/>
+	    <result property="userId" column="user_id"/>
+	    <result property="reviewComment" column="review_comment"/>
+	    <result property="rating" column="rating"/>
+	    <result property="reviewCreatedAt" column="created_at"/>
+	</resultMap>
+
+	<select id="countReviewsByMovie" parameterType="long" resultType="int">
+	    <![CDATA[
+	        SELECT COUNT(*) FROM reviews r
+	        WHERE r.movie_id = #{id}
+	    ]]>
+	</select>
+
+</mapper>

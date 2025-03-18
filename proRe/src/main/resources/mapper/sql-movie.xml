@@ -14,6 +14,8 @@
     			director,
     			release_date,
     			genre,
+    			is_domestic,
+    			country,
     			poster_image_name,
     			synopsis,
     			ROUND(average_rating, 1) AS average_rating
@@ -42,6 +44,8 @@
 	            m.director,
 	            m.release_date,
 	            m.genre,
+	            m.is_domestic,
+    			m.country,
 	            m.poster_image_name,
 	            m.synopsis,
 	            ROUND(m.average_rating, 1) AS average_rating,
@@ -68,6 +72,8 @@
 	    <result property="title" column="title"/>
 	    <result property="director" column="director"/>
 	    <result property="genre" column="genre"/>
+	    <result property="isDomestic" column="is_domestic"/>
+	    <result property="country" column="country"/>
 	    <result property="releaseDate" column="release_date"/>
 	    <result property="posterImageName" column="poster_image_name"/>
 	    <result property="synopsis" column="synopsis"/>
@@ -106,8 +112,8 @@
 	<!-- 영화 추가 -->
     <insert id="insertMovie" parameterType="org.big.dto.MovieDto">
     	<![CDATA[
-        	INSERT INTO movies (title, director, genre, release_date, poster_image_name, synopsis, average_rating)
-		    VALUES (#{title}, #{director}, #{genre}, #{releaseDate}, 
+        	INSERT INTO movies (title, director, genre, is_domestic, country, release_date, poster_image_name, synopsis, average_rating)
+		    VALUES (#{title}, #{director}, #{genre},  #{isDomestic}, #{country}, #{releaseDate}, 
 		            #{posterImageName}, #{synopsis}, 0)
     	]]>
 	</insert>
@@ -120,6 +126,8 @@
 	            director = #{director},
 	            release_date = #{releaseDate},
 	            genre = #{genre},
+	            is_domestic = #{isDomestic}, 
+	            country = #{country},
 	            synopsis = #{synopsis},
 	            poster_image_name = #{posterImageName}
 	        WHERE id = #{id}
