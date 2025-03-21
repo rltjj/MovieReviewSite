@@ -60,6 +60,12 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE users ADD role VARCHAR2(20) DEFAULT 'ROLE_USER' NOT NULL;
+
+TRUNCATE TABLE users;
+DROP SEQUENCE users_seq;
+CREATE SEQUENCE users_seq START WITH 1 INCREMENT BY 1 NOCACHE;
+
 -- 영화 테이블 생성
 CREATE TABLE movies (
     id NUMBER PRIMARY KEY,
@@ -72,6 +78,16 @@ CREATE TABLE movies (
     average_rating NUMBER DEFAULT 0  -- 영화의 평균 평점
 );
 
+ALTER TABLE movies ADD review_count NUMBER DEFAULT 0;
+
+ALTER TABLE movies
+ADD is_domestic CHAR(1) CHECK (is_domestic IN ('Y', 'N'));
+
+ALTER TABLE movies
+ADD country VARCHAR2(50);
+
+
+
 -- 리뷰 테이블 생성
 CREATE TABLE reviews (
     id NUMBER PRIMARY KEY,
@@ -83,6 +99,8 @@ CREATE TABLE reviews (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
+
+ALTER TABLE reviews ADD isModified CHAR(1) DEFAULT 'N';
 
 -- 좋아요 테이블 생성
 CREATE TABLE likes (
@@ -103,3 +121,5 @@ CREATE TABLE bookmarks (
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE,
     CONSTRAINT unique_user_movie UNIQUE (user_id, movie_id)  -- 중복 저장 x
 );
+
+select * from users;

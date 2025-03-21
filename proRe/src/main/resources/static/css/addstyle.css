@@ -20,8 +20,6 @@ h2 {
     text-align: center;
 }
 
-
-
 /* 폼 스타일 */
 form {
     width: 100%;
@@ -40,8 +38,8 @@ label {
     margin-bottom: 3px;
 }
 
-/* 입력 필드 & 텍스트 영역 */
-input, textarea {
+/* 입력 필드 & 텍스트 영역 & 드롭다운 */
+input, textarea, select {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -59,6 +57,29 @@ input[type="file"] {
 textarea {
     height: 80px;
     resize: none;
+}
+
+/* 라디오 버튼 가로 정렬 */
+.radio-group {
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 수직 정렬 */
+    gap: 20px; /* 버튼 간 간격 */
+}
+
+/* 라디오 버튼 가로 정렬 */
+.radio-group {
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    gap: 40px; /* 버튼 간 간격 */
+}
+
+/* 라벨과 라디오 버튼을 한 줄로 정렬 */
+.radio-group label {
+    display: flex;
+    align-items: center; /* 버튼과 글자를 같은 높이로 */
+    gap: 5px; /* 버튼과 글자 간격 */
+    white-space: nowrap; /* 글자가 여러 줄로 내려가지 않도록 */
 }
 
 /* 버튼 스타일 */
@@ -86,4 +107,3 @@ a {
 a:hover {
     color: graytext;
 }
-

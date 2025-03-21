@@ -9,4 +9,6 @@ public interface UserService {
 	boolean updatePassword(String username, String oldPassword, String newPassword);
 	void deleteAccount(String username);
 	Long findUserIdByUsername(String username);
+	boolean isUsernameTaken(String username);
+	boolean isEmailTaken(String email);
 }

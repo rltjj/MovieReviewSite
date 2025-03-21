@@ -14,4 +14,5 @@ public class ReviewDto {
     private String movieTitle;
     private String reviewComment;
     private Date reviewCreatedAt;
+    private char isModified;
 }

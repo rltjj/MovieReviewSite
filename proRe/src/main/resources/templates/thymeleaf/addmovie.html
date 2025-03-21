@@ -28,12 +28,16 @@
         <label for="genre">장르</label>
         <input type="text" id="genre" name="genre" required><br>
         
-        <label>
-		    <input type="radio" name="isDomestic" value="Y" checked> 국내
-		</label>
-		<label>
-		    <input type="radio" name="isDomestic" value="N"> 해외
-		</label><br>
+        <label>국내/해외 선택:</label>
+        <div class="radio-group">
+	        <label>
+			    <input type="radio" name="isDomestic" value="Y" checked> 국내
+			</label>
+			<label>
+			    <input type="radio" name="isDomestic" value="N"> 해외
+			</label>
+		</div>
+		<br>
 		
 		<label for="country">나라 선택:</label>
 		<select id="country" name="country">

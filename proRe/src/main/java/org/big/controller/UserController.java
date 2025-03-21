@@ -15,9 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,8 +51,20 @@ public class UserController {
 
     // 회원가입 처리
     @PostMapping("/signup-ing")
-    public String registerUser(UserDto userDto, Model model) {
-        try {
+    public String registerUser(@ModelAttribute UserDto userDto, Model model) {
+        try {	
+        	// 아이디 중복 체크
+            if (userService.isUsernameTaken(userDto.getUsername())) {
+                model.addAttribute("error", "이미 사용 중인 아이디입니다.");
+                return "thymeleaf/signup";
+            }
+
+            // 이메일 중복 체크
+            if (userService.isEmailTaken(userDto.getEmail())) {
+                model.addAttribute("error", "이미 사용 중인 이메일입니다.");
+                return "thymeleaf/signup";
+            }
+            
             userService.registerUser(userDto);
             System.out.println("회원가입 성공! 로그인 페이지로 이동(제발)");
             return "redirect:/login"; 
@@ -60,14 +77,22 @@ public class UserController {
 
     // 로그인 페이지 요청
     @GetMapping("/login")
-    public String showLoginForm() {
+    public String showLoginForm(HttpSession session, Model model) {
+    	String errorMessage = (String) session.getAttribute("error");
+
+        if (errorMessage != null) {
+            model.addAttribute("error", errorMessage);
+            session.removeAttribute("error"); // 메시지를 한 번 표시한 후 삭제
+        }
+        
         return "thymeleaf/login"; // login.html 뷰로 이동
     }
 
     // 로그인 처리
     @PostMapping("/login-ing")
-    public String login(UserDto userDto, Model model) {
-        model.addAttribute("errorMessage", "로그인에 실패했습니다.");
+    public String login(@ModelAttribute UserDto userDto, Model model) {
+    	System.out.println("로그인 시도: " + userDto.getUsername());
+    	model.addAttribute("error", "로그인에 실패했습니다. 아이디와 비밀번호를 확인해주세요.");
         return "thymeleaf/login"; 
     }
 
@@ -188,7 +213,7 @@ public class UserController {
         return "redirect:/movie/" + movieId;
     }
     
- // 북마크 삭제
+    // 북마크 삭제
     @PostMapping("/movie/bookmark/removemypage")
     public String removeBookmarkMypage(@RequestParam Long movieId, 
                                  @AuthenticationPrincipal UserDetails userDetails) {
@@ -263,7 +288,6 @@ public class UserController {
         reviewService.deleteReview(reviewId, movieId);
         return "redirect:/mypage";
     }
-
 
 }
 

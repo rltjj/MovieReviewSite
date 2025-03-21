@@ -17,6 +17,12 @@
         ]]>
     </select>
     
+    <select id="findByEmail" resultType="org.big.dto.UserDto">
+        <![CDATA[
+            SELECT * FROM users WHERE email = #{email}
+        ]]>
+    </select>
+    
     <select id="findUserIdByUsername" resultType="java.lang.Long">
         <![CDATA[
             SELECT id FROM users WHERE username = #{username}

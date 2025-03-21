@@ -22,24 +22,30 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 	    http
+	        .csrf(csrf -> csrf.disable()) // CSRF 비활성화
 	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/mypage", "/movie/review/*", "/movie/bookmark/*").authenticated() // 로그인해야 접근 가능
+	            .requestMatchers("/mypage", "/movie/review/*", "/movie/bookmark/*").authenticated() // 로그인 필요
+	            .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 관리자만 접근 가능
+	            .requestMatchers("/movies/add", "/main?action=update").hasAuthority("ROLE_ADMIN") // 영화 추가/수정/삭제 관리자만
 	            .anyRequest().permitAll() // 나머지는 모두 접근 허용
 	        )
 	        .formLogin(login -> login
-	            .loginPage("/login") // 로그인 페이지 지정
-	            .loginProcessingUrl("/login-ing") // 로그인 처리 URL
-	            .defaultSuccessUrl("/main", true) // 로그인 성공 시 이동할 페이지
+	            .loginPage("/login") 
+	            .loginProcessingUrl("/login-ing")
+	            .failureHandler((request, response, exception) -> {
+	                request.getSession().setAttribute("error", "로그인 실패: 아이디와 비밀번호를 확인하세요.");
+	                response.sendRedirect("/login");
+	            })  
+	            .defaultSuccessUrl("/main", true) // 로그인 성공 후 이동할 페이지
 	            .permitAll()
 	        )
 	        .logout(logout -> logout
-	            .logoutUrl("/logout") // 로그아웃 URL
-	            .logoutSuccessUrl("/login") // 로그아웃 후 이동할 페이지
+	            .logoutUrl("/logout")
+	            .logoutSuccessUrl("/login")
 	            .invalidateHttpSession(true)
 	            .deleteCookies("JSESSIONID")
 	            .permitAll()
-	        )
-	        .csrf(csrf -> csrf.disable()); // CSRF 비활성화 (테스트 환경)
+	        );
 
 	    return http.build();
 	}

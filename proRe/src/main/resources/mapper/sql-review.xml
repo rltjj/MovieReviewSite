@@ -33,7 +33,7 @@
 	<update id="updateReview">
     	<![CDATA[
         	UPDATE reviews 
-    		SET rating = #{rating}, review_comment = #{reviewComment}, created_at = SYSDATE
+    		SET rating = #{rating}, review_comment = #{reviewComment}, isModified = 'Y'
     		WHERE id = #{reviewId}
     	]]>
 	</update>
@@ -64,7 +64,7 @@
     
     <select id="findReviewsByMovie" resultMap="reviewResultMap">
 	    <![CDATA[
-	        SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt,
+	        SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt, r.isModified,
 	               m.title AS movie_title
 	        FROM reviews r
 	        JOIN movies m ON r.movie_id = m.id
@@ -80,6 +80,7 @@
 	    <result property="reviewComment" column="review_comment"/>
 	    <result property="rating" column="rating"/>
 	    <result property="reviewCreatedAt" column="created_at"/>
+	    <result property="isModified" column="isModified"/>
 	</resultMap>
 
 	<select id="countReviewsByMovie" parameterType="long" resultType="int">

@@ -53,6 +53,7 @@ public class MovieController {
 	        e.printStackTrace();
 	        model.addAttribute("errorMessage", "영화 목록을 불러오는 중 오류가 발생했습니다.");
 	    }
+	    
 	    return "thymeleaf/main";
 	}
 
@@ -80,6 +81,7 @@ public class MovieController {
 	    // 영화 리뷰 목록 가져오기
 	    List<ReviewDto> reviews = reviewService.getReviewsByMovie(movieId); // 메소드 이름 수정
 	    model.addAttribute("reviews", reviews);
+	    model.addAttribute("userId", userId);
 
 	    return "thymeleaf/moviedetail";
 	}

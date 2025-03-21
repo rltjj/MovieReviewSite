@@ -57,6 +57,8 @@ public class MovieServiceImpl implements MovieService {
 	    movieEntity.setDirector(movie.getDirector());
 	    movieEntity.setReleaseDate(movie.getReleaseDate());
 	    movieEntity.setGenre(movie.getGenre());
+	    movieEntity.setIsDomestic(movie.getIsDomestic());
+	    movieEntity.setCountry(movie.getCountry());
 	    movieEntity.setSynopsis(movie.getSynopsis());
 	    movieEntity.setPosterImageName(movie.getPosterImageName());  // 포스터 파일명 업데이트
 	    

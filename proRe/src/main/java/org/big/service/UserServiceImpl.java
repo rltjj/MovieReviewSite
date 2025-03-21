@@ -56,4 +56,16 @@ public class UserServiceImpl implements UserService {
 		// TODO Auto-generated method stub
 		return userMapper.findUserIdByUsername(username);
 	}
+
+	@Override
+	public boolean isUsernameTaken(String username) {
+		// TODO Auto-generated method stub
+		return userMapper.findByUsername(username) != null;
+	}
+
+	@Override
+	public boolean isEmailTaken(String email) {
+		// TODO Auto-generated method stub
+		return userMapper.findByEmail(email) != null;
+	}
 }

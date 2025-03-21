@@ -1,8 +1,8 @@
 @charset "UTF-8";
 /* 영화 상세 페이지 스타일 */
 .movie-detail {
-    margin-left: 160px;
-    margin-right: 160px;
+    margin-left: 15%;
+    margin-right: auto;
     display: flex;
     gap: 40px; /* 포스터와 내용 사이에 간격 */
     margin-top: 20px; /* 페이지 상단 여백 */
@@ -182,5 +182,6 @@
 .review-item .star-rating .fa-star-o {
     color: lightgray;
 }
+
 
 
