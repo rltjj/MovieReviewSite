@@ -1,7 +1,9 @@
 package org.big.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.big.dto.MovieDto;
 import org.big.dto.ReviewDto;
@@ -12,13 +14,18 @@ import org.big.service.MovieService;
 import org.big.service.ReviewService;
 import org.big.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +35,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Controller
 public class UserController {
@@ -42,6 +50,9 @@ public class UserController {
     private BookmarkService bookmarkService;
     @Autowired
     private UserMapper userMapper;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     
     // 회원가입 페이지 요청
     @GetMapping("/signup")
@@ -102,7 +113,66 @@ public class UserController {
         SecurityContextHolder.clearContext(); // Spring Security 로그아웃 처리
         return "redirect:/login"; 
     }
+    
+    //아이디비번 찾기
+    @GetMapping("/findidpw")
+    public String showFindIdPwForm() {
+        return "thymeleaf/findidpw"; // signup.html 뷰로 이동
+    }
+    
+    @PostMapping("/findid-ing")
+    public String findId(@RequestParam String email, Model model) {
+        // 이메일로 사용자 조회
+        String user = userService.findUsernameByEmail(email);
 
+        if (user != null) {
+            // 아이디를 찾은 경우
+            model.addAttribute("found", true);
+            model.addAttribute("username", user);
+        } else {
+            // 아이디를 찾지 못한 경우
+            model.addAttribute("found", false);
+            model.addAttribute("error", "이메일에 해당하는 아이디가 없습니다.");
+        }
+        return "thymeleaf/findidpw";  // 해당 HTML 페이지를 반환
+    }
+    
+    @PostMapping("/verify-email")
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> verifyEmail(@RequestParam String email, HttpSession session) {
+        UserDto user = userMapper.findByEmail(email);
+        Map<String, Boolean> response = new HashMap<>();
+
+        if (user != null) {
+            session.setAttribute("verifiedEmail", email); // 세션에 저장
+            response.put("success", true);
+        } else {
+            response.put("success", false);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+    
+    // 비밀번호 변경
+    @PostMapping("/changepw-ing")
+    public String changePassword(@RequestParam String password, HttpSession session, Model model) {
+        
+        String email = (String) session.getAttribute("verifiedEmail");
+
+        if (email == null) {
+            model.addAttribute("error", "이메일 인증을 먼저 해주세요.");
+            return "findidpw";
+        }
+
+        String encodedPassword = passwordEncoder.encode(password);
+        userMapper.updatePassword(email, encodedPassword);
+
+        session.removeAttribute("verifiedEmail"); // 인증 정보 삭제
+        model.addAttribute("success", "비밀번호가 변경되었습니다.");
+
+        return "redirect:/login";
+    }
+    
     // 마이페이지
     @GetMapping("/mypage")
     public String myPage(Model model) {
@@ -142,30 +212,6 @@ public class UserController {
         
         return "thymeleaf/mypage"; // mypage.html 뷰로 이동
     }
-
-
-    
-    // 비밀번호 변경
-    @PostMapping("/mypage/updatePassword")
-    public String updatePassword(UserDto userDto, Model model) {
-        String username = getAuthenticatedUsername();
-        if (username == null) {
-            return "redirect:/login"; // 로그인 안 됐으면 로그인 페이지로 리다이렉트
-        }
-
-        try {
-            boolean isUpdated = userService.updatePassword(username, userDto.getOldPassword(), userDto.getNewPassword());
-            if (isUpdated) {
-                model.addAttribute("successMessage", "비밀번호가 성공적으로 변경되었습니다.");
-            } else {
-                model.addAttribute("errorMessage", "비밀번호 변경에 실패했습니다.");
-            }
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", "오류가 발생했습니다.");
-        }
-        return "thymeleaf/mypage"; // 변경 후 마이페이지로 리다이렉트
-    }
-
 
     // 회원 탈퇴
     @PostMapping("/mypage/deleteAccount")

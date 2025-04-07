@@ -21,9 +21,46 @@
     			ROUND(average_rating, 1) AS average_rating
 			FROM
     			movies
-    		ORDER BY id
+    		ORDER BY title
         ]]>
     </select>
+    
+	<select id="findMoviesByTitle" resultType="org.big.dto.MovieDto">
+		<![CDATA[
+			SELECT * FROM movies WHERE title LIKE '%' || #{keyword} || '%'
+		]]>
+	</select>
+	
+	<select id="findMoviesByGenre" resultType="org.big.dto.MovieDto">
+	    <![CDATA[
+			SELECT * FROM movies WHERE genre LIKE '%' || #{keyword} || '%'
+		]]>
+	</select>
+	
+	<select id="findMoviesByCountry" resultType="org.big.dto.MovieDto">
+	    <![CDATA[
+			SELECT * FROM movies WHERE country LIKE '%' || #{keyword} || '%'
+		]]>
+	</select>
+	
+	<select id="findMoviesBySummary" resultType="org.big.dto.MovieDto">
+	    <![CDATA[
+			SELECT * FROM movies WHERE synopsis LIKE '%' || #{keyword} || '%'
+		]]>
+	</select>
+	
+	<select id="findMoviesByAll" resultType="org.big.dto.MovieDto">
+	    <![CDATA[
+			SELECT * 
+			FROM movies 
+			WHERE LOWER(title) LIKE '%' || LOWER(TRIM(#{keyword})) || '%'
+			   OR LOWER(genre) LIKE '%' || LOWER(TRIM(#{keyword})) || '%'
+			   OR LOWER(country) LIKE '%' || LOWER(TRIM(#{keyword})) || '%'
+			   OR LOWER(synopsis) LIKE '%' || LOWER(TRIM(#{keyword})) || '%'
+		]]>
+	</select>
+	
+	
     
     <!-- 페이징된 영화 목록 조회 -->
 	<select id="getAllMoviesWithPaging" resultType="org.big.dto.MovieDto">
@@ -115,8 +152,7 @@
     <insert id="insertMovie" parameterType="org.big.dto.MovieDto">
     	<![CDATA[
         	INSERT INTO movies (title, director, genre, is_domestic, country, release_date, poster_image_name, synopsis, average_rating)
-		    VALUES (#{title}, #{director}, #{genre},  #{isDomestic}, #{country}, #{releaseDate}, 
-		            #{posterImageName}, #{synopsis}, 0)
+			VALUES (#{title}, #{director}, #{genre}, #{isDomestic}, #{country}, #{releaseDate}, COALESCE(#{posterImageName}, 'default.jpg'), #{synopsis}, 0)
     	]]>
 	</insert>
 	

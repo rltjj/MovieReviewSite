@@ -3,3 +3,7 @@
 body {
     font-family: 'Nanum Gothic', sans-serif;
 }
+
+.pre-line {
+    white-space: pre-line;
+}

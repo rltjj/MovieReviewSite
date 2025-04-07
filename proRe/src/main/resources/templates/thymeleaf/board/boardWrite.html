@@ -4,11 +4,17 @@
 <meta charset="UTF-8">
 <title>게시판 등록</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}"></link>
+	<link rel="stylesheet" th:href="@{/css/boardstyle.css}"></link>
 </head>
 <body>
+
+	<div th:replace="~{thymeleaf/menu}"></div>
+	
+	<br>
+	
 	<div class="container">
-		<h2>게시판 등록</h2>
-		<form action="insertBoard.do" method="post" name="frm" id="frm" enctype="multipart/form-data">
+		<h2>공지사항 등록</h2>
+		<form action="/admin/boardWrite" method="post" name="frm" id="frm" enctype="multipart/form-data">
 			<table class="board_detail">
 				<tr>
 					<td>제목</td>
@@ -20,10 +26,17 @@
 					</td>
 				</tr>
 			</table>
-			<input type="file" id="files" name="files" multiple="multiple">
 			<input type="submit" id="submit" value="저장" class="btn">
+			<input type="file" id="files" name="files" multiple="multiple">
 		</form>
+		
+		<a href="/board" class="btn">목록으로</a>
+		
 	</div>
+	
+	<br>
+
+	<div th:replace="~{thymeleaf/footer}"></div>
 </body>
 </html>
 

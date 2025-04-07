@@ -34,20 +34,19 @@
 <body>
   	<div class="navbar">
     	<div class="left">
-      		<a href="/main">홈</a>
-    	</div>
-    	<div class="center">
-		    <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" th:href="@{/movies/add}">영화 추가</a>
-		    <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" th:href="@{/main(action='update')}">영화 수정/삭제</a>
-		</div>
-	    <div class="right">
-	    	<a href="#">Q&A</a>
-	    	<a href="#">공지사항</a>
-	    	<a href="/mypage">마이페이지</a>
-	    	<a th:href="@{/logout}" th:if="${#authorization.expression('isAuthenticated()')}">로그아웃</a>
-	    	<a th:href="@{/login}" th:unless="${#authorization.expression('isAuthenticated()')}">로그인</a>
-		</div>
-
+            <a href="/main">홈</a>
+        </div>
+        <div class="center">
+            <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/movies/add}">영화 추가</a>
+            <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="@{/main(action='update')}">영화 수정/삭제</a>
+        </div>
+        <div class="right">
+            <a href="#">Q&A</a>
+            <a href="/board">공지사항</a>
+            <a href="/mypage">마이페이지</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/logout}">로그아웃</a>
+    		<a sec:authorize="!isAuthenticated()" th:href="@{/login}">로그인</a>
+        </div>
   	</div>
 </body>
 </html>

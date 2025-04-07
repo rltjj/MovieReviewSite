@@ -19,7 +19,7 @@
     
     <select id="findByEmail" resultType="org.big.dto.UserDto">
         <![CDATA[
-            SELECT * FROM users WHERE email = #{email}
+            SELECT * FROM users WHERE LOWER(email) = LOWER(#{email})
         ]]>
     </select>
     
@@ -33,8 +33,8 @@
     <update id="updatePassword">
         <![CDATA[
             UPDATE users
-            SET password = #{password}
-            WHERE username = #{username}
+            SET password = #{encodedPassword}
+            WHERE email = #{email}
         ]]>
     </update>
 

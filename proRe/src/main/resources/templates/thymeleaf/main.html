@@ -12,37 +12,59 @@
     <div th:replace="~{thymeleaf/menu}"></div>
 
     <br>
+    
+    <div class="search-bar">
+    	<form method="get" action="#" th:action="@{/search}">
+	        <select name="category">
+	            <option value="all">전체</option>
+	            <option value="title">제목</option>
+	            <option value="genre">장르</option>
+	            <option value="country">국가</option>
+	            <option value="summary">줄거리</option>
+	        </select>
+	        <input type="text" name="keyword" placeholder="검색어를 입력하세요">
+	        <button type="submit">검색</button>
+	    </form>
+	</div>
+    
+    <div th:if="${message}" class="no-results">
+		        <p th:text="${message}"></p>
+	</div>
+	
+	<br>
 
-    <div class="movie-list">
-        <div th:each="movie : ${movies}" class="movie-item">
-            <a th:href="@{/movie/{id}(id=${movie.id})}" class="movie-card">
-                <div class="movie-image">
-                    <img th:src="@{/images/{poster}(poster=${movie.posterImageName})}" alt="영화 포스터">
-                </div>
-                <div class="movie-info">
-                    <h3 th:text="${movie.title}"></h3>
-                    <p>평균&nbsp;
-                        <span class="star-rating" th:attr="data-rating=${movie.averageRating != null ? movie.averageRating : 0}">
-                            <i class="fa fa-star" th:each="i : ${#numbers.sequence(1,5)}"
-                               th:classappend="${i <= movie.averageRating ? 'fa-star' : 'fa-star-o'}"></i>
-                        </span>
-                        <span class="average-rating" th:text="${movie.averageRating != null ? movie.averageRating : 0}"></span>
-                    </p>
-                </div>
-            </a>
-            
-
-            <!-- 수정 및 삭제 버튼 표시 -->
-            <div th:if="${action == 'update'}" class="movie-actions">
-			    <a th:href="@{/movies/update/{id}(id=${movie.id})}" class="btn-edit">수정</a>
-			    
-			    <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="post" 
-			          onsubmit="return confirm('정말로 이 영화를 삭제하시겠습니까?');">
-			        <button type="submit" class="btn-delete">삭제</button>
-			    </form>
-			</div>
-        </div>
-    </div>
+	<div class = "movie-container">
+	    <div class="movie-list">
+	        <div th:each="movie : ${movies}" class="movie-item">
+	            <a th:href="@{/movie/{id}(id=${movie.id})}" class="movie-card">
+	                <div class="movie-image">
+	                    <img th:src="@{/images/{poster}(poster=${movie.posterImageName})}" alt="영화 포스터">
+	                </div>
+	                <div class="movie-info">
+	                    <h3 th:text="${movie.title}"></h3>
+	                    <p>평균&nbsp;
+	                        <span class="star-rating" th:attr="data-rating=${movie.averageRating != null ? movie.averageRating : 0}">
+	                            <i class="fa fa-star" th:each="i : ${#numbers.sequence(1,5)}"
+	                               th:classappend="${i <= movie.averageRating ? 'fa-star' : 'fa-star-o'}"></i>
+	                        </span>
+	                        <span class="average-rating" th:text="${movie.averageRating != null ? movie.averageRating : 0}"></span>
+	                    </p>
+	                </div>
+	            </a>
+	            
+	
+	            <!-- 수정 및 삭제 버튼 표시 -->
+	            <div th:if="${action == 'update'}" class="movie-actions">
+				    <a th:href="@{/movies/update/{id}(id=${movie.id})}" class="btn-edit">수정</a>
+				    
+				    <form th:action="@{/movies/delete/{id}(id=${movie.id})}" method="post" 
+				          onsubmit="return confirm('정말로 이 영화를 삭제하시겠습니까?');">
+				        <button type="submit" class="btn-delete">삭제</button>
+				    </form>
+				</div>
+	        </div>
+	    </div>
+	</div>
 
     <br>
 

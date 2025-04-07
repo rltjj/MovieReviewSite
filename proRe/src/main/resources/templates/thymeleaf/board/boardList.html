@@ -3,11 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <title>게시판 목록</title>
-	<link rel="stylesheet" th:href="@{/css/style.css}"></link>
+<link rel="stylesheet" th:href="@{/css/style.css}"></link>
+<link rel="stylesheet" th:href="@{/css/boardstyle.css}"></link>
 </head>
 <body>
-	<div>
-		<h2>게시판 목록</h2>
+
+	<div th:replace="~{thymeleaf/menu}"></div>
+
+	<br>
+
+	<div class="container">
+		<h2>공지사항</h2>
 		<table class="board_list">
 			<colgroup>
 				<col width="15%">
@@ -24,22 +30,44 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:if="${#lists.size(list)} > 0" th:each="list:${list}">
+				<tr th:if="${boards != null and #lists.size(boards) > 0}"
+					th:each="list : ${boards}">
 					<td th:text="${list.boardIdx}"></td>
-					<!-- <td class="title" th:text="${list.title}"></td> -->
-					<td class="title">
-						<a href="/board/openBoardDetail.do?boardIdx="th:attrappend="href=${list.boardIdx}" th:text="${list.title}"></a>
-					</td>
+					<td class="title"><a
+						th:href="@{/board/{boardIdx}(boardIdx=${list.boardIdx})}"
+						th:text="${list.title}"></a></td>
 					<td th:text="${list.hitCnt}"></td>
-					<td th:text="${#temporals.format(list.createdDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+					<td
+						th:text="${#temporals.format(list.createdDatetime, 'yyyy-MM-dd HH:mm:ss')}"></td>
 				</tr>
-				<tr th:unless="${#lists.size(list)} > 0">
+				<tr th:if="${boards == null or #lists.size(boards) == 0}">
 					<td colspan="4">조회된 결과가 없습니다.</td>
 				</tr>
 			</tbody>
 		</table>
-		<a href="openBoardWrite.do" class="btn">글 쓰기</a>
+		<div class="pagination">
+			<!-- 이전 페이지 링크 -->
+			<a th:href="@{/board(page=${currentPage - 1}, size=${size})}"
+				class="btn" th:if="${currentPage > 1}">&lt; 이전</a>
+
+			<!-- 페이지 번호 링크 (전체 페이지 수만큼 반복) -->
+			<span class="pagebutton"> <a
+				th:each="page : ${#numbers.sequence(1, totalPages)}"
+				th:href="@{/board(page=${page}, size=${size})}"
+				th:text="${page}"></a>
+			</span>
+
+			<!-- 다음 페이지 링크 -->
+			<a th:href="@{/board(page=${currentPage + 1}, size=${size})}"
+				class="btn" th:if="${currentPage < totalPages}">다음 &gt;</a>
+		</div>
+		<a sec:authorize="hasAuthority('ROLE_ADMIN')" href="admin/boardWrite"
+			class="btn">글 쓰기</a>
 	</div>
+
+	<br>
+
+	<div th:replace="~{thymeleaf/footer}"></div>
 
 </body>
 </html>

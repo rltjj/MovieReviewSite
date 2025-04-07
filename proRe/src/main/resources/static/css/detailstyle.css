@@ -2,7 +2,7 @@
 /* 영화 상세 페이지 스타일 */
 .movie-detail {
     margin-left: 15%;
-    margin-right: auto;
+    margin-right: 15%;
     display: flex;
     gap: 40px; /* 포스터와 내용 사이에 간격 */
     margin-top: 20px; /* 페이지 상단 여백 */
@@ -10,9 +10,26 @@
 }
 
 .movie-detail img {
-    width: 500px;
+    width: 400px;
     height: auto;
 }
+
+.synopsis-box {
+    width: 100%;
+    max-width: 600px;
+    height: 120px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    
+    white-space: pre-line; 
+    word-wrap: break-word;
+}
+
+
+
 
 .movie-info {
     flex-grow: 1;
@@ -36,6 +53,7 @@
 /* 버튼 */
 .button-container {
     margin-top: auto; /* 자동으로 아래 정렬 */
+    margin-left: 15%;
     display: flex;
     gap: 20px;
 }

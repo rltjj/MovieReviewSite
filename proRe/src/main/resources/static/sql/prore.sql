@@ -72,7 +72,7 @@ CREATE TABLE movies (
     title VARCHAR2(255) NOT NULL,
     director VARCHAR2(100),
     release_date DATE,
-    genre VARCHAR2(50),
+    genre VARCHAR2(100),
     poster_image_name VARCHAR2(255),
     synopsis CLOB,  -- 줄거리 요약
     average_rating NUMBER DEFAULT 0  -- 영화의 평균 평점
@@ -123,3 +123,45 @@ CREATE TABLE bookmarks (
 );
 
 select * from users;
+
+create table t_board(
+   board_idx NUMBER(11) PRIMARY KEY,
+   title  VARCHAR2(300) NOT NULL,
+   content VARCHAR2(4000) NOT NULL,
+   hit_cnt NUMBER(10) DEFAULT 0 NOT NULL,
+   created_datetime DATE  DEFAULT SYSDATE,
+   creator_id VARCHAR2(50) NOT NULL
+ );
+ 
+ CREATE SEQUENCE tboard_seq
+       INCREMENT BY 1
+       START WITH 1
+       MINVALUE 1
+       MAXVALUE 9999
+       NOCYCLE
+       NOCACHE
+       NOORDER;
+       
+drop table t_file;
+
+create table t_file(
+   idx NUMBER(10) NOT NULL PRIMARY KEY,
+   board_idx NUMBER(11) NOT NULL,
+   original_file_name  VARCHAR2(300) NOT NULL,
+   stored_file_path VARCHAR2(500) NOT NULL,
+   file_size NUMBER(15) NOT NULL,
+   creator_id VARCHAR2(50) NOT NULL,
+   created_datetime DATE  DEFAULT SYSDATE,
+   updator_id VARCHAR2(50) DEFAULT NULL,
+   updated_datetime DATE  DEFAULT NULL,
+   deleted_yn CHAR(1) DEFAULT 'N' NOT NULL
+ );
+drop sequence tfile_seq;
+CREATE SEQUENCE tfile_seq
+       INCREMENT BY 1
+       START WITH 1
+       MINVALUE 1
+       MAXVALUE 9999
+       NOCYCLE
+       NOCACHE
+       NOORDER;

@@ -27,7 +27,11 @@
 			    </span>
 			</p>
         	<p>개봉일 : <span th:text="${movie.formattedReleaseDate}"></span></p>
-        	<p>줄거리 : <span th:text="${movie.synopsis}"></span></p>
+        	<p>줄거리: </p>
+			<div class="synopsis-box">
+			    <span th:utext="${#strings.trim(movie.synopsis)}"></span>
+			</div>
+        	
         	
         	<br>
         	
@@ -38,23 +42,21 @@
             		</span>
             	<span class="average-rating" th:text="${movie.averageRating != null ? movie.averageRating : 0}"></span>
         	</p>
-        	
-        	<br><br><br>
-
-        	<!-- 버튼 컨테이너 -->
-        	<div class="button-container">
-            	<form th:action="@{${isBookmarked} ? '/movie/bookmark/remove' : '/movie/bookmark/' + ${movie.id}}" method="post">
-				    <input type="hidden" name="movieId" th:value="${movie.id}">
-				    <button type="submit" class="bookmark-btn" th:text="${isBookmarked ? '북마크 해제' : '북마크'}"></button>
-				</form>
-
-            	<form th:action="@{/movie/review/{id}(id=${movie.id})}" method="get">
-                	<button type="submit" class="review-btn">리뷰 작성</button>
-            	</form>
-        	</div>
     	</div>
 	</div>
+	
+	<br>
+	
+	<div class="button-container">
+    	<form th:action="@{${isBookmarked} ? '/movie/bookmark/remove' : '/movie/bookmark/' + ${movie.id}}" method="post">
+			<input type="hidden" name="movieId" th:value="${movie.id}">
+			<button type="submit" class="bookmark-btn" th:text="${isBookmarked ? '북마크 해제' : '북마크'}"></button>
+		</form>
 
+        <form th:action="@{/movie/review/{id}(id=${movie.id})}" method="get">
+        	<button type="submit" class="review-btn">리뷰 작성</button>
+        </form>
+    </div>
     
     <br>
     
@@ -67,7 +69,7 @@
 	
 	    <div th:each="review : ${movie.reviews}" class="review-item">
 		    <p><strong th:text="${review.username}"></strong> 님의 리뷰</p>
-		    <p th:text="${review.reviewComment}"></p>		    
+		    <p th:text="${review.reviewComment}"  class="pre-line"></p>		    
 		    <!-- 별점 표시 -->
 		    <p>
 		        <span class="star-rating">

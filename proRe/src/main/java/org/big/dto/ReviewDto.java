@@ -15,4 +15,5 @@ public class ReviewDto {
     private String reviewComment;
     private Date reviewCreatedAt;
     private char isModified;
+    private int likeCount;
 }

@@ -13,4 +13,10 @@ public interface MovieService {
 	int getReviewCount(Long movieId);
 	List<MovieDto> getReviewsByMovieId(Long movieId, int offset, int pageSize);
 	List<MovieDto> getAllMoviesWithPaging(int page, int pageSize) throws Exception;
+	
+	List<MovieDto> searchByTitle(String keyword);
+	List<MovieDto> searchByGenre(String keyword);
+	List<MovieDto> searchByCountry(String keyword);
+	List<MovieDto> searchBySummary(String keyword);
+	List<MovieDto> searchByAll(String keyword);
 }

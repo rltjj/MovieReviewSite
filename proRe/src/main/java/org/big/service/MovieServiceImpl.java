@@ -21,7 +21,33 @@ public class MovieServiceImpl implements MovieService {
     public List<MovieDto> getAllMovies() throws Exception{
     	return movieMapper.getAllMovies();
     }
+    
+    @Override
+    public List<MovieDto> searchByTitle(String keyword) {
+        return movieMapper.findMoviesByTitle(keyword);
+    }
 
+    @Override
+    public List<MovieDto> searchByGenre(String keyword) {
+        return movieMapper.findMoviesByGenre(keyword);
+    }
+
+    @Override
+    public List<MovieDto> searchByCountry(String keyword) {
+        return movieMapper.findMoviesByCountry(keyword);
+    }
+
+    @Override
+    public List<MovieDto> searchBySummary(String keyword) {
+        return movieMapper.findMoviesBySummary(keyword);
+    }
+    
+    @Override
+    public List<MovieDto> searchByAll(String keyword) {
+        return movieMapper.findMoviesByAll(keyword);
+    }
+
+        
 	/*
 	 * @Override public List<MovieDto> getAllMovies(int page, int pageSize) throws
 	 * Exception { int offset = (page - 1) * pageSize; return

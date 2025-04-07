@@ -4,10 +4,16 @@
 <meta charset="UTF-8">
 <title>게시판 상세 화면</title>
 	<link rel="stylesheet" th:href="@{/css/style.css}"></link>
+	<link rel="stylesheet" th:href="@{/css/boardstyle.css}"></link>
 </head>
 <body>
-	<div>
-		<h2>게시글 상세화면</h2>
+	
+	<div th:replace="~{thymeleaf/menu}"></div>
+	
+	<br>
+	
+	<div class="container">
+		<h2>공지사항 상세화면</h2>
 		<form id="frm" method="post">
 			<table class="board_detail">
 				<colgroup>
@@ -16,7 +22,7 @@
 					<col width="15%">
 					<col width="20%">
 				</colgroup>
-				<caption>게시글 상세내용</caption>
+				<caption>공지사항 상세내용</caption>
 				<tbody>
 					<tr>
 						<th scope="row">글 번호</th>
@@ -33,56 +39,60 @@
 					<tr>
 						<th scope="row">제목</th>
 						<td colspan="3">
-							<input type="text" id="title" name="title" th:value="${board.title}">
+							<input type="text" id="title" name="title" th:value="${board.title}"
+								   th:attr="disabled=${not #authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
 						</td>
 					</tr>
 					<tr>
 						<td colspan="4" class="view_text">
-							<textarea title="내용" id="content" name="content" th:text="${board.content}"></textarea>
+							<textarea title="내용" id="content" name="content" th:text="${board.content}"
+									  th:attr="disabled=${not #authorization.expression('hasAuthority(''ROLE_ADMIN'')')}"></textarea>
 						</td>
 					</tr>
 				</tbody>
 			</table>
-			<input type="hidden" name="boardIdx" th:value="${board.boardIdx}">
+			<input type="hidden" id="boardIdx" name="boardIdx" th:value="${board.boardIdx}">
 		</form>
 		
 		<div class="file_list">
-			<a th:each="list:${board.fileList}" th:href="@{/board/downloadBoardFile.do(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName}(${list.fileSize} kb)|"></a>
+			<a th:each="list:${board.fileList}" th:href="@{/board/file(idx=${list.idx}, boardIdx=${list.boardIdx})}" th:text="|${list.originalFileName}(${list.fileSize} kb)|"></a>
 		</div>
 		
-		<input type="button" id="list" value="목록으로">
-		<input type="button" id="edit" value="수정하기">
-		<input type="button" id="delete" value="삭제하기">
+		<input type="button" id="list" class="btn" value="목록으로">
+		<input type="button" id="edit" class="btn" value="수정하기" sec:authorize="hasAuthority('ROLE_ADMIN')">
+		<input type="button" id="delete" class="btn" value="삭제하기" sec:authorize="hasAuthority('ROLE_ADMIN')">
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function(){
+				var boardIdx = $("#boardIdx").val();
+				
 				$("#list").on("click", function(){
-					location.href="openBoardList.do";
+					location.href="/board";
 				});	
 				
 				$("#edit").on("click", function(){
+					$("#method").val("PUT");
 					var frm = $("#frm")[0];
-					frm.action="updateBoard.do";
+					frm.action="/board/update/" + boardIdx;
 					frm.submit();
 				});
 				
 				$("#delete").on("click", function(){
+					$("#method").val("DELETE");
 					var frm = $("#frm")[0];
-					frm.action="deleteBoard.do";
-					frm.submit();
+					if (confirm("정말 삭제하시겠습니까?")) {
+						frm.action="/board/delete/" + boardIdx;
+						frm.submit();
+			        }
 				});
 			});
 		</script>
 	</div>
+	
+	<br>
+
+	<div th:replace="~{thymeleaf/footer}"></div>
+	
 </body>
 </html>
-
-
-
-
-
-
-
-
-

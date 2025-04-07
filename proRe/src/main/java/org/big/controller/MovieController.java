@@ -3,13 +3,9 @@ package org.big.controller;
 import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.big.dto.MovieDto;
 import org.big.dto.ReviewDto;
-import org.big.dto.UserDto;
 import org.big.service.BookmarkService;
 import org.big.service.MovieService;
 import org.big.service.ReviewService;
@@ -26,9 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 @Controller
 public class MovieController {
@@ -44,46 +37,85 @@ public class MovieController {
 
 	@GetMapping("/main")
 	public String getMovieList(@RequestParam(value = "action", required = false) String action, Model model) {
-	    try {
-	        // 영화 목록 가져오기
-	        List<MovieDto> movies = movieService.getAllMovies();
-	        model.addAttribute("movies", movies);
-	        model.addAttribute("action", action); // action 값을 모델에 추가
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        model.addAttribute("errorMessage", "영화 목록을 불러오는 중 오류가 발생했습니다.");
+		try {
+			// 영화 목록 가져오기
+			List<MovieDto> movies = movieService.getAllMovies();
+			model.addAttribute("movies", movies);
+			model.addAttribute("action", action); // action 값을 모델에 추가
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorMessage", "영화 목록을 불러오는 중 오류가 발생했습니다.");
+		}
+
+		return "thymeleaf/main";
+	}
+
+	@GetMapping("/search")
+	public String searchMovies(@RequestParam("category") String category,
+	                           @RequestParam("keyword") String keyword,
+	                           Model model) throws Exception {
+	    if (keyword == null || keyword.trim().isEmpty()) {
+	        model.addAttribute("movies", movieService.getAllMovies());
+	        return "main";
+	    }
+
+	    keyword = keyword.trim(); // 공백 제거
+	    List<MovieDto> movies;
+
+	    switch (category) {
+	        case "title":
+	            movies = movieService.searchByTitle(keyword);
+	            break;
+	        case "genre":
+	            movies = movieService.searchByGenre(keyword);
+	            break;
+	        case "country":
+	            movies = movieService.searchByCountry(keyword);
+	            break;
+	        case "summary":
+	            movies = movieService.searchBySummary(keyword);
+	            break;
+	        default:
+	            movies = movieService.searchByAll(keyword);
+	            break;
 	    }
 	    
+	    if (movies.isEmpty()) {
+	        model.addAttribute("message", keyword + "을(를) 포함하는 검색 결과가 없습니다.");
+	    }else {
+	    	model.addAttribute("message", keyword + "을(를) 포함하는 검색 결과");
+	    }
+	    
+	    model.addAttribute("movies", movies);
 	    return "thymeleaf/main";
 	}
 
-
 	@GetMapping("/movie/{movieId}")
 	public String movieDetail(@PathVariable Long movieId, Principal principal, Model model) throws Exception {
-	    // 영화 정보 가져오기
-	    MovieDto movie = movieService.getMovieById(movieId);
-	    model.addAttribute("movie", movie);
+		// 영화 정보 가져오기
+		MovieDto movie = movieService.getMovieById(movieId);
+		model.addAttribute("movie", movie);
 
-	    // 로그인한 사용자 ID 가져오기
-	    String username = (principal != null) ? principal.getName() : null;
-	    model.addAttribute("username", username);
+		// 로그인한 사용자 ID 가져오기
+		String username = (principal != null) ? principal.getName() : null;
+		model.addAttribute("username", username);
 
-	    // 로그인한 경우 userId 가져오기
-	    Long userId = null;
-	    if (username != null) {
-	        userId = userService.findUserIdByUsername(username);
-	    }
+		// 로그인한 경우 userId 가져오기
+		Long userId = null;
+		if (username != null) {
+			userId = userService.findUserIdByUsername(username);
+		}
 
-	    // 북마크 여부
-	    boolean isBookmarked = (userId != null) ? bookmarkService.isBookmarked(userId, movieId) : false;
-	    model.addAttribute("isBookmarked", isBookmarked);
+		// 북마크 여부
+		boolean isBookmarked = (userId != null) ? bookmarkService.isBookmarked(userId, movieId) : false;
+		model.addAttribute("isBookmarked", isBookmarked);
 
-	    // 영화 리뷰 목록 가져오기
-	    List<ReviewDto> reviews = reviewService.getReviewsByMovie(movieId); // 메소드 이름 수정
-	    model.addAttribute("reviews", reviews);
-	    model.addAttribute("userId", userId);
+		// 영화 리뷰 목록 가져오기
+		List<ReviewDto> reviews = reviewService.getReviewsByMovie(movieId); // 메소드 이름 수정
+		model.addAttribute("reviews", reviews);
+		model.addAttribute("userId", userId);
 
-	    return "thymeleaf/moviedetail";
+		return "thymeleaf/moviedetail";
 	}
 
 	// 리뷰 작성 페이지

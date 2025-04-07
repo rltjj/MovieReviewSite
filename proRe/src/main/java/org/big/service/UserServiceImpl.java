@@ -29,6 +29,12 @@ public class UserServiceImpl implements UserService {
     public UserDto findUserByUsername(String username) {
         return userMapper.findByUsername(username);
     }
+    
+    @Override
+	public boolean verifyEmail(String email) {
+    	UserDto user = userMapper.findByEmail(email);
+        return user != null; 
+	}
 
 	@Override
 	public boolean checkPassword(String rawPassword, String encodedPassword) {
@@ -53,19 +59,26 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public Long findUserIdByUsername(String username) {
-		// TODO Auto-generated method stub
 		return userMapper.findUserIdByUsername(username);
+	}
+	
+	@Override
+	public String findUsernameByEmail(String email) {
+		UserDto user = userMapper.findByEmail(email);
+        if (user != null) {
+            return user.getUsername(); 
+        }
+        return null;
 	}
 
 	@Override
 	public boolean isUsernameTaken(String username) {
-		// TODO Auto-generated method stub
 		return userMapper.findByUsername(username) != null;
 	}
 
 	@Override
 	public boolean isEmailTaken(String email) {
-		// TODO Auto-generated method stub
 		return userMapper.findByEmail(email) != null;
 	}
+	
 }

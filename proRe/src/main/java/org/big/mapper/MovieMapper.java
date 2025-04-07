@@ -18,5 +18,11 @@ public interface MovieMapper {
 	int getReviewCountByMovieId(Long movieId);
 	List<MovieDto> getReviewsByMovieId(Long movieId, int offset, int pageSize);
 	List<MovieDto> getAllMoviesWithPaging(@Param("offset") int offset, @Param("pageSize") int pageSize);
+	
+	List<MovieDto> findMoviesByTitle(String keyword);
+	List<MovieDto> findMoviesByGenre(String keyword);
+	List<MovieDto> findMoviesByCountry(String keyword);
+	List<MovieDto> findMoviesBySummary(String keyword);
+	List<MovieDto> findMoviesByAll(String keyword);
 
 }

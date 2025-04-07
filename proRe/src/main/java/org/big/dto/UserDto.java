@@ -14,6 +14,7 @@ public class UserDto {
     private String role;
     
     // 비밀번호 변경 필드 추가
+    private String encodedPassword;
     private String oldPassword;
     private String newPassword;
 }

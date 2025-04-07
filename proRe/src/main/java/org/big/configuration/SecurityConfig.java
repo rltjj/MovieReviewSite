@@ -2,6 +2,7 @@ package org.big.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,6 +28,7 @@ public class SecurityConfig {
 	            .requestMatchers("/mypage", "/movie/review/*", "/movie/bookmark/*").authenticated() // 로그인 필요
 	            .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // 관리자만 접근 가능
 	            .requestMatchers("/movies/add", "/main?action=update").hasAuthority("ROLE_ADMIN") // 영화 추가/수정/삭제 관리자만
+	            .requestMatchers(HttpMethod.POST, "/changepw-ing").permitAll() 
 	            .anyRequest().permitAll() // 나머지는 모두 접근 허용
 	        )
 	        .formLogin(login -> login
@@ -62,7 +64,7 @@ public class SecurityConfig {
 
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
-		return (web) -> web.ignoring().requestMatchers("/board/*", "/api/board/*", "/error", "/error/*", "/img/**", "/favicon.ico");
+		return (web) -> web.ignoring().requestMatchers("/error", "/error/*", "/img/**", "/favicon.ico");
 	}
 
 	@Bean
