@@ -83,13 +83,27 @@
 			    <span th:if="${#strings.equals(review.isModified, 'Y')}">(수정됨)</span>
 			</p>
 			
-			<div th:if="${review.username == username}" style="display: flex; justify-content: flex-end; gap: 20px; align-items: center;">
-	            <button th:onclick="'window.location.href=\'/review/edit/' + ${review.id} + '\''">수정</button>
-	            <form action="/review/delete" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
-	                    <input type="hidden" name="reviewId" th:value="${review.id}">
-	                    <button type="submit">삭제</button>
-	            </form>
-	        </div>
+			<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+				<div style="display: flex; gap: 8px;">
+					<form th:action="@{/review/like}" method="post" th:if="${!review.likedByCurrentUser}">
+				        <input type="hidden" name="reviewId" th:value="${review.id}" />
+				        <button type="submit">❤️ 좋아요</button>
+				    </form>
+				    <form th:action="@{/review/unlike}" method="post" th:if="${review.likedByCurrentUser}">
+				        <input type="hidden" name="reviewId" th:value="${review.id}" />
+				        <button type="submit">💔 취소</button>
+				    </form>
+				    <span th:text="'좋아요 ' + ${review.likeCount} + '개'"></span>
+				</div>
+			    
+			    <div th:if="${review.username == username}" style="display: flex; justify-content: flex-end; gap: 20px; align-items: center;">
+		            <button th:onclick="'window.location.href=\'/review/edit/' + ${review.id} + '\''">수정</button>
+		            <form action="/review/delete" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+		                    <input type="hidden" name="reviewId" th:value="${review.id}">
+		                    <button type="submit">삭제</button>
+		            </form>
+		        </div>
+			</div>
 		</div>
 	</div>
 

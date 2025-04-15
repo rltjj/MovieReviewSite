@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ReviewDto {
-    private Long id; // id 필드 추가
+    private Long id;
     private Long movieId; 
     private Long userId;
     private String username;
@@ -16,4 +16,5 @@ public class ReviewDto {
     private Date reviewCreatedAt;
     private char isModified;
     private int likeCount;
+    private boolean likedByCurrentUser;
 }

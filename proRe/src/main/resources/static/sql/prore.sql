@@ -101,6 +101,7 @@ CREATE TABLE reviews (
 );
 
 ALTER TABLE reviews ADD isModified CHAR(1) DEFAULT 'N';
+ALTER TABLE reviews ADD like_count NUMBER DEFAULT 0;
 
 -- 좋아요 테이블 생성
 CREATE TABLE likes (
