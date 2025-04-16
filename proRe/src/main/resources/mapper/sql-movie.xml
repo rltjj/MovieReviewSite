@@ -151,8 +151,11 @@
 	<!-- 영화 추가 -->
     <insert id="insertMovie" parameterType="org.big.dto.MovieDto">
     	<![CDATA[
-        	INSERT INTO movies (title, director, genre, is_domestic, country, release_date, poster_image_name, synopsis, average_rating)
-			VALUES (#{title}, #{director}, #{genre}, #{isDomestic}, #{country}, #{releaseDate}, COALESCE(#{posterImageName}, 'default.jpg'), #{synopsis}, 0)
+        	INSERT INTO movies 
+        		(title, director, genre, is_domestic, country, release_date, poster_image_name, synopsis, average_rating)
+			VALUES 
+				(#{title}, #{director}, #{genre}, #{isDomestic}, #{country}, #{releaseDate}, COALESCE(#{posterImageName}, 
+				'default.jpg'), #{synopsis}, 0)
     	]]>
 	</insert>
 	

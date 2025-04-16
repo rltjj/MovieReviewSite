@@ -84,18 +84,68 @@
 			</p>
 			
 			<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
-				<div style="display: flex; gap: 8px;">
-					<form th:action="@{/review/like}" method="post" th:if="${!review.likedByCurrentUser}">
-				        <input type="hidden" name="reviewId" th:value="${review.id}" />
-				        <button type="submit">❤️ 좋아요</button>
-				    </form>
-				    <form th:action="@{/review/unlike}" method="post" th:if="${review.likedByCurrentUser}">
-				        <input type="hidden" name="reviewId" th:value="${review.id}" />
-				        <button type="submit">💔 취소</button>
-				    </form>
-				    <span th:text="'좋아요 ' + ${review.likeCount} + '개'"></span>
+				<div id="like-section" th:attr="data-review-id=${review.id}" style="display: flex; gap: 8px;">
+					<button 
+					    th:attr="data-liked=${review.likedByCurrentUser != null ? review.likedByCurrentUser : false}, data-review-id=${review.id}" 
+					    th:text="${review.likedByCurrentUser} ? '💔 취소' : '❤️ 좋아요'"
+					    onclick="toggleLike(this)">
+					</button>
+					<span class="like-count">좋아요&nbsp;
+					    <span th:text="${review.likeCount != null ? review.likeCount : 0}"></span>개
+					</span>
 				</div>
-			    
+
+				<script>
+				function toggleLike(button) {
+				    const reviewId = button.getAttribute('data-review-id');
+				    const liked = button.getAttribute('data-liked') === 'true';
+				    const url = liked ? '/review/unlike' : '/review/like';
+
+				    fetch(url, {
+				        method: 'POST',
+				        headers: {
+				            'Content-Type': 'application/x-www-form-urlencoded'
+				        },
+				        body: 'reviewId=' + reviewId
+				    })
+				    .then(response => response.json())
+				    .then(data => {
+				        if (data.error) {
+				            alert(data.error); // "로그인이 필요합니다."
+				            return; // 에러일 경우 이후 코드 실행 안 함
+				        }
+
+				        // ✅ 정상 응답일 경우에만 아래 코드 실행
+				        button.setAttribute('data-liked', (!liked).toString());
+				        button.textContent = liked ? '❤️ 좋아요' : '💔 취소';
+
+				        const container = button.closest('#like-section');
+				        const likeCountSpan = container.querySelector('.like-count');
+				        likeCountSpan.textContent = `좋아요 ${data.likeCount}개`;
+				    })
+				    .catch(error => {
+				        console.error("요청 중 에러 발생:", error);
+				        alert("요청 중 문제가 발생했습니다.");
+				    });
+				}
+				</script>
+				<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+				<script>
+				$(document).ready(function () {
+				    $('.like-button').click(function () {
+				        const reviewId = $(this).data('review-id');
+				
+				        $.post('/review/like', { reviewId: reviewId }, function (response) {
+				            if (response.error) {
+				                alert(response.error);
+				            } else {
+				                $('#likeCount-' + reviewId).text(response.likeCount);
+				            }
+				        });
+				    });
+				});
+				</script>
+
 			    <div th:if="${review.username == username}" style="display: flex; justify-content: flex-end; gap: 20px; align-items: center;">
 		            <button th:onclick="'window.location.href=\'/review/edit/' + ${review.id} + '\''">수정</button>
 		            <form action="/review/delete" method="post" onsubmit="return confirm('정말로 삭제하시겠습니까?');">

@@ -34,4 +34,16 @@ public interface ReviewMapper {
 
 	void updateMovieAverageRating(Long movieId);
 
+	void insertLike(Long reviewId, Long userId);
+
+	void incrementLikeCount(Long reviewId);
+
+	void deleteLike(Long reviewId, Long userId);
+
+	void decrementLikeCount(Long reviewId);
+	
+	int getLikeCount(Long reviewId);
+
+	int didUserLikeReview(@Param("reviewId") Long reviewId, @Param("userId") Long userId);
+
 }

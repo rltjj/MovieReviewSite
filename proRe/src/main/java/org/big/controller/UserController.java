@@ -1,5 +1,6 @@
 package org.big.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -333,6 +334,55 @@ public class UserController {
         Long movieId = review.getMovieId(); 
         reviewService.deleteReview(reviewId, movieId);
         return "redirect:/mypage";
+    }
+
+    @PostMapping("/review/like")
+    @ResponseBody
+    public Map<String, Object> likeReview(@RequestParam("reviewId") Long reviewId, Principal principal) {
+    	Map<String, Object> response = new HashMap<>();
+
+        if (principal == null) {
+            response.put("error", "로그인이 필요합니다.");
+            return response;
+        }
+        
+        String username = principal.getName();
+        Long userId = userMapper.findUserIdByUsername(username);
+
+        // 이미 좋아요했는지 체크
+        boolean alreadyLiked = reviewService.didUserLikeReview(reviewId, userId);
+        if (!alreadyLiked) {
+            reviewService.likeReview(reviewId, userId);
+        }
+
+        int updatedLikeCount = reviewService.getLikeCount(reviewId);
+        
+        response.put("likeCount", updatedLikeCount);
+        return response;
+    }
+
+    @PostMapping("/review/unlike")
+    @ResponseBody
+    public Map<String, Object> unlikeReview(@RequestParam("reviewId") Long reviewId, Principal principal) {
+    	Map<String, Object> response = new HashMap<>();
+
+        if (principal == null) {
+            response.put("error", "로그인이 필요합니다.");
+            return response;
+        }
+        
+        String username = principal.getName();
+        Long userId = userMapper.findUserIdByUsername(username);
+
+        boolean alreadyLiked = reviewService.didUserLikeReview(reviewId, userId);
+        if (alreadyLiked) {
+            reviewService.unlikeReview(reviewId, userId);
+        }
+
+        int updatedLikeCount = reviewService.getLikeCount(reviewId);
+
+        response.put("likeCount", updatedLikeCount);
+        return response;
     }
 
 }

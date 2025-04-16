@@ -92,31 +92,40 @@ public class MovieController {
 
 	@GetMapping("/movie/{movieId}")
 	public String movieDetail(@PathVariable Long movieId, Principal principal, Model model) throws Exception {
-		// 영화 정보 가져오기
-		MovieDto movie = movieService.getMovieById(movieId);
-		model.addAttribute("movie", movie);
+	    // 영화 정보 가져오기
+	    MovieDto movie = movieService.getMovieById(movieId);
+	    model.addAttribute("movie", movie);
 
-		// 로그인한 사용자 ID 가져오기
-		String username = (principal != null) ? principal.getName() : null;
-		model.addAttribute("username", username);
+	    // 로그인한 사용자 ID 가져오기
+	    String username = (principal != null) ? principal.getName() : null;
+	    model.addAttribute("username", username);
 
-		// 로그인한 경우 userId 가져오기
-		Long userId = null;
-		if (username != null) {
-			userId = userService.findUserIdByUsername(username);
-		}
+	    Long userId = null;
+	    if (username != null) {
+	        userId = userService.findUserIdByUsername(username);
+	    }
 
-		// 북마크 여부
-		boolean isBookmarked = (userId != null) ? bookmarkService.isBookmarked(userId, movieId) : false;
-		model.addAttribute("isBookmarked", isBookmarked);
+	    // 북마크 여부
+	    boolean isBookmarked = (userId != null) ? bookmarkService.isBookmarked(userId, movieId) : false;
+	    model.addAttribute("isBookmarked", isBookmarked);
 
-		// 영화 리뷰 목록 가져오기
-		List<ReviewDto> reviews = reviewService.getReviewsByMovie(movieId); // 메소드 이름 수정
-		model.addAttribute("reviews", reviews);
-		model.addAttribute("userId", userId);
+	    // 영화 리뷰 목록 가져오기
+	    List<ReviewDto> reviews = reviewService.getReviewsByMovie(movieId);
 
-		return "thymeleaf/moviedetail";
+	    if (userId != null) {
+	        for (ReviewDto review : reviews) {
+	            boolean liked = reviewService.didUserLikeReview(review.getId(), userId);
+	            review.setLikedByCurrentUser(liked);
+	        }
+	    }
+
+	    movie.setReviews(reviews);
+	    model.addAttribute("reviews", reviews);
+	    model.addAttribute("userId", userId);
+
+	    return "thymeleaf/moviedetail";
 	}
+
 
 	// 리뷰 작성 페이지
 	@GetMapping("/movie/review/{id}")
@@ -136,8 +145,7 @@ public class MovieController {
 
 	// 리뷰 제출
 	@PostMapping("/movie/review-submit")
-	public String submitReview(@RequestParam Long movieId, @RequestParam int rating, @RequestParam String reviewComment,
-			Model model) {
+	public String submitReview(@RequestParam Long movieId, @RequestParam int rating, @RequestParam String reviewComment) {
 		// 인증된 사용자 정보 가져오기
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || authentication.getPrincipal().equals("anonymousUser")) {
@@ -145,11 +153,10 @@ public class MovieController {
 			return "redirect:/login";
 		}
 
-		// 사용자 정보가 있으면 리뷰 저장
+		// 사용자 정보가 있으면 리뷰 저장 및 영화 정보 업데이트
 		String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-		Long userId = userService.findUserIdByUsername(username); // 사용자 ID를 가져오는 방법이 필요
+		Long userId = userService.findUserIdByUsername(username); 
 
-		// 리뷰 저장 및 영화 정보 업데이트
 		reviewService.submitReview(movieId, rating, reviewComment, userId);
 
 		return "redirect:/movie/" + movieId; // 리뷰 작성 후 영화 상세 페이지로 리디렉션
@@ -169,7 +176,7 @@ public class MovieController {
 			String fileName = file.getOriginalFilename(); // 업로드된 파일 이름 가져오기
 			movie.setPosterImageName(fileName); // DTO에 파일명 저장
 
-			// 실제 파일 저장 로직 (예: resources/static/images에 저장)
+			// 이미지 파일 저장
 			String filePath = "C:/movie_posters/" + fileName;
 			try {
 				file.transferTo(new File(filePath));

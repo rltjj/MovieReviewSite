@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>영화 리뷰 사이트</title>
+    <link rel="stylesheet" th:href="@{/css/userstyle.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nanum+Gothic&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        h2, h3, p {
+            text-align: left;
+            padding-left: 10%;
+        }
+        .return-link {
+            color: #222;
+            text-decoration: none;
+        }
+        .form-container {
+            width: 50%;
+            margin-left: 10%;
+        }
+        .form-container div {
+            margin-bottom: 10px;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .form-group input {
+            width: 250px;
+        }
+        .form-group button {
+            width: 120px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{thymeleaf/menu}"></div>
+
+    <br>
+
+    <h3><a class="return-link" th:href="@{/login}" th:unless="${#authorization.expression('isAuthenticated()')}">⇦ &nbsp; 로그인 페이지로 돌아가기</a></h3>
+
+    <br>
+
+    <h2>아이디 찾기</h2>
+    <form class="form-container" th:action="@{/findid-ing}" method="post">
+        <label class="form-label" for="email">이메일로 아이디 찾기</label>
+        <div class="form-group">
+            <input type="email" id="email" name="email" placeholder="이메일을 입력하세요" required />
+            <button type="submit">아이디 찾기</button>
+        </div>
+    </form>
+
+    <p th:if="${found != null and found}" th:text="'입력한 이메일로 등록된 아이디는 ' + ${username} + '입니다.'" style="color: green;"></p>
+	<p th:if="${found == null or !found}" th:text="${error}" style="color: red;"></p>
+
+    <br><br>
+
+    <!-- 비밀번호 변경하기 -->
+	<h2>비밀번호 변경하기</h2>
+	
+	<!-- 이메일 인증 폼 -->
+	<form class="form-container">
+	    <label class="form-label" for="verify-email">이메일 인증</label>
+	    <div class="form-group">
+	        <input type="email" id="verify-email" name="email" placeholder="이메일을 입력하세요" required />
+	        <button type="button" onclick="verifyEmail()">인증 하기</button>
+	    </div>
+	</form>
+	
+	<form class="form-container" id="changePwForm" th:action="@{/changepw-ing}" method="post" style="display: none;">
+	    <label class="form-label" for="password">새 비밀번호</label>
+	    <div class="form-group">
+	        <input type="password" id="password" name="password" placeholder="새로운 비밀번호를 입력하세요" required />
+	        <button type="submit">비밀번호 변경</button>
+	    </div>
+	</form>
+
+	<script>
+	function verifyEmail() {
+	    var email = document.getElementById("verify-email").value;
+	
+	    fetch("/verify-email", {
+	        method: "POST",
+	        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+	        body: "email=" + encodeURIComponent(email)
+	    })
+	    .then(response => response.json())
+	    .then(data => {
+	        if (data.success) {
+	            alert("이메일 인증 성공!");
+	            document.getElementById("changePwForm").style.display = "block"; // 비밀번호 변경 폼 활성화
+	        } else {
+	            alert("이메일을 찾을 수 없습니다.");
+	        }
+	    });
+	}
+	</script>
+
+    <br>
+
+    <div th:replace="~{thymeleaf/footer}"></div>
+</body>
+</html>

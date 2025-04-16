@@ -5,7 +5,7 @@
     <!-- 사용자 ID에 해당하는 리뷰 목록을 조회하는 SQL -->
     <select id="findReviewsByUser" resultType="org.big.dto.ReviewDto">
     	<![CDATA[
-        	SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt, m.title AS movie_title
+        	SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt, r.like_count, m.title AS movie_title
         	FROM reviews r
         	JOIN movies m ON r.movie_id = m.id
         	WHERE r.user_id = #{userId}
@@ -63,16 +63,22 @@
 	</update>
     
     <select id="findReviewsByMovie" resultMap="reviewResultMap">
-	    <![CDATA[
-	        SELECT r.id, r.user_id, r.movie_id, r.rating, r.review_comment, r.created_at AS reviewCreatedAt, r.isModified,
-	               m.title AS movie_title
-	        FROM reviews r
-	        JOIN movies m ON r.movie_id = m.id
-	        WHERE r.movie_id = #{id}
-	        ORDER BY r.created_at DESC
-	    ]]>
+	    SELECT 
+	        r.id, r.user_id, r.movie_id, r.rating, r.review_comment, 
+	        r.created_at, r.isModified, r.like_count,
+	        m.title AS movie_title,
+	        CASE 
+	            WHEN #{currentUserId} IS NOT NULL AND EXISTS (
+	                SELECT 1 FROM likes l WHERE l.review_id = r.id AND l.user_id = #{currentUserId}
+	            )
+	            THEN 1 ELSE 0 
+	        END AS liked_by_current_user
+	    FROM reviews r
+	    JOIN movies m ON r.movie_id = m.id
+	    WHERE r.movie_id = #{id}
+	    ORDER BY r.created_at DESC
 	</select>
-	
+
 	<resultMap id="reviewResultMap" type="org.big.dto.ReviewDto">
 	    <id property="id" column="id"/>
 	    <result property="movieId" column="movie_id"/>
@@ -81,12 +87,63 @@
 	    <result property="rating" column="rating"/>
 	    <result property="reviewCreatedAt" column="created_at"/>
 	    <result property="isModified" column="isModified"/>
+	    <result property="likeCount" column="like_count"/>
+	    <result property="likedByCurrentUser" column="liked_by_current_user"/>
 	</resultMap>
 
 	<select id="countReviewsByMovie" parameterType="long" resultType="int">
 	    <![CDATA[
 	        SELECT COUNT(*) FROM reviews r
 	        WHERE r.movie_id = #{id}
+	    ]]>
+	</select>
+	
+	<!-- 좋아요 추가 -->
+	<insert id="insertLike">
+		<![CDATA[
+			INSERT INTO likes (review_id, user_id)
+		    VALUES (#{reviewId}, #{userId})
+	    ]]>
+	</insert>
+	
+	<!-- 좋아요 삭제 -->
+	<delete id="deleteLike">
+		<![CDATA[
+	    	DELETE FROM likes
+	    	WHERE review_id = #{reviewId} AND user_id = #{userId}
+	    ]]>
+	</delete>
+	
+	<!-- 좋아요 수 증가 -->
+	<update id="incrementLikeCount">
+	    <![CDATA[
+	        UPDATE reviews
+	        SET like_count = like_count + 1
+	        WHERE id = #{reviewId}
+	    ]]>
+	</update>
+	
+	<!-- 좋아요 수 감소 -->
+	<update id="decrementLikeCount">
+	    <![CDATA[
+	        UPDATE reviews
+	        SET like_count = like_count - 1
+	        WHERE id = #{reviewId}
+	    ]]>
+	</update>
+	
+	<select id="getLikeCount" resultType="int">
+		<![CDATA[
+	    	SELECT like_count FROM reviews WHERE id = #{reviewId}
+	    ]]>
+	</select>
+	
+	<select id="didUserLikeReview" resultType="int">
+	    <![CDATA[
+	        SELECT COUNT(*) 
+	        FROM likes 
+	        WHERE review_id = #{reviewId} 
+	        AND user_id = #{userId}
 	    ]]>
 	</select>
 

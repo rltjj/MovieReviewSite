@@ -67,4 +67,23 @@ public class ReviewService {
     public List<ReviewDto> getReviewsByMovie(Long id) {
         return reviewMapper.findReviewsByMovie(id);
     }
+
+	public void likeReview(Long reviewId, Long userId) {
+		reviewMapper.insertLike(reviewId, userId);
+	    reviewMapper.incrementLikeCount(reviewId);
+	}
+
+	public void unlikeReview(Long reviewId, Long userId) {
+		reviewMapper.deleteLike(reviewId, userId);
+	    reviewMapper.decrementLikeCount(reviewId);
+	}
+
+	public int getLikeCount(Long reviewId) {
+		return reviewMapper.getLikeCount(reviewId);
+	}
+
+	public boolean didUserLikeReview(Long reviewId, Long userId) {
+	    return reviewMapper.didUserLikeReview(reviewId, userId) > 0;
+	}
+
 }
