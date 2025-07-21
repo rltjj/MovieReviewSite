@@ -28,9 +28,6 @@
 
   
   
-실행 영상
-
-https://github.com/user-attachments/assets/4602cacb-4bc7-47d1-8a0a-5023bae2ad5f
 
 
 
