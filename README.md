@@ -1,17 +1,17 @@
 <h2>영화 리뷰 웹 페이지</h2>
-Spring Boot, MyBatis, OracleDB를 활용한 영화 리뷰 웹 애플리케이션입니다.  
-사용자는 영화를 검색하고 리뷰 및 별점을 등록할 수 있으며, 관리자는 영화 데이터와 게시판을 관리할 수 있습니다.<br>
+Spring Boot 기반의 영화 리뷰 웹 서비스입니다. <br>
+사용자는 영화 검색, 리뷰 작성, 별점 평가, 북마크, 로그인/회원가입 등 기능을 사용할 수 있으며, <br>
+관리자는 영화 및 공지사항을 관리할 수 있습니다.<br>
 
 <br>
 
-<h2>사용기술 및 개발환경</h2>
-운영체제             : Window11<br>
-사용언어           	: Java, JavaScript, Ajax, jQuery, HTML5, CSS3, Thymeleaf, MyBatis<br>
-FrameWork / Library	: Spring<br>
-DB	                : Oracle<br>
-Tool	              : Eclipse<br>
-WAS	                : Tomcat<br>
-Collaboration	      : Git Hub<br>
+<h2>개발환경</h2>
+- **Language**: Java 17, HTML, CSS, JavaScript (jQuery)<br>
+- **Framework**: Spring Boot, Thymeleaf, MyBatis<br>
+- **DB**: Oracle<br>
+- **WAS**: Tomcat<br>
+- **Tool**: Eclipse<br>
+- **형상관리**: GitHub<br>
 
 <br>
 
@@ -39,6 +39,12 @@ Collaboration	      : Git Hub<br>
 - 세션/쿠키 기반 로그인 처리 및 인증 여부 판단<br>
 
 <br>
+
+<h2>프로젝트 구조</h2>
+<img width="519" height="349" alt="image" src="https://github.com/user-attachments/assets/eb0b1b48-d899-48d4-bded-7e854d09ccd4" />
+
+
+
 <br>
 
 <h2>화면 추가 설명</h2>
