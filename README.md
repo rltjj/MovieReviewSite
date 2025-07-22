@@ -6,12 +6,12 @@ Spring Boot 기반의 영화 리뷰 웹 서비스입니다. <br>
 <br>
 
 <h2>개발환경</h2>
-- **Language**: Java 17, HTML, CSS, JavaScript (jQuery)<br>
-- **Framework**: Spring Boot, Thymeleaf, MyBatis<br>
-- **DB**: Oracle<br>
-- **WAS**: Tomcat<br>
-- **Tool**: Eclipse<br>
-- **형상관리**: GitHub<br>
+- <b>Language</b>: Java 17, HTML, CSS, JavaScript (jQuery)<br>
+- <b>Framework</b>: Spring Boot, Thymeleaf, MyBatis<br>
+- <b>DB</b>: Oracle<br>
+- <b>WAS</b>: Tomcat<br>
+- <b>Tool</b>: Eclipse<br>
+- <b>형상관리</b>: GitHub<br>
 
 <br>
 
@@ -26,7 +26,7 @@ Spring Boot 기반의 영화 리뷰 웹 서비스입니다. <br>
 - 아이디 찾기, 비밀번호 변경(이메일 인증)<br>
 - 리뷰 작성/수정/삭제<br>
 - 좋아요/취소, 북마크 관리<br>
-- 마이페이지 : 내 정보, 북마크, 내가 쓴 리뷰<br>
+- 마이페이지 : 내 정보, 북마크, 내가 쓴 리뷰, 회원탈퇴<br>
 
 <h3>관리자</h3>
 - 영화 등록 / 수정 / 삭제<br>
