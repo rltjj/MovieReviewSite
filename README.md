@@ -1,5 +1,63 @@
-영화 리뷰 웹 페이지
-  
+<h2>영화 리뷰 웹 페이지</h2>
+<br>
+Spring Boot, MyBatis, OracleDB를 활용한 영화 리뷰 웹 애플리케이션입니다.  
+사용자는 영화를 검색하고 리뷰 및 별점을 등록할 수 있으며, 관리자는 영화 데이터와 게시판을 관리할 수 있습니다.
+
+<h2>사용기술 및 개발환경</h2>
+운영체제	: Window11<br>
+사용언어	: Java, JavaScript, Ajax, jQuery, HTML5, CSS3, Thymeleaf, MyBatis<br>
+FrameWork / Library	: Spring<br>
+DB	: Oracle<br>
+Tool	: Eclipse<br>
+WAS	: Tomcat<br>
+Collaboration	: Git Hub<br>
+
+
+<h2>주요 기능</h2>
+- 회원가입 / 로그인 (세션 기반 인증)<br>
+- 영화 목록 조회 / 검색 / 상세 페이지<br>
+- 리뷰 및 별점 작성 (CRUD)<br>
+- 관리자 페이지: 영화 등록 / 수정 / 삭제<br>
+- 게시판: 공지사항 등록<br>
+
+<br>
+●	헤더<br>
+- 홈 (메인 페이지), 공지사항, 로그인 또는 로그아웃 및 회원가입 페이지 이동<br>
+- 관리자로 로그인 -> 영화 추가/수정/삭제 페이지로 이동하는 버튼 표시<br>
+<br>
+●	메인 페이지<br>
+- 영화 목록 <br>
+- 영화 검색<br>
+<br>
+●	영화 상세 페이지<br>
+- 영화 상세 정보<br>
+- 해당 영화 리뷰 목록 (리뷰 작성자 : 리뷰 수정/삭제 버튼 표시)<br>
+- 북마크 버튼, 리뷰 작성 페이지 이동 버튼<br>
+- 리뷰 좋아요 버튼<br>
+<br>
+●	회원가입 / 로그인 <br>
+- 회원가입 (이메일로 인증)<br>
+- 로그인 / 로그아웃<br>
+- 아이디 찾기 및 비밀번호 변경<br>
+<br>
+●	마이 페이지<br>
+- 회원 정보<br>
+- 북마크 및 리뷰 관리<br>
+- 회원 탈퇴<br>
+<br>
+●	리뷰 등록/수정/삭제<br>
+<br>
+●	공지사항 페이지<br>
+- 공지사항 목록<br>
+- 공지사항에 업로드된 파일 다운로드<br>
+- 관리자로 로그인 -> 공지사항 게시글 추가/수정/삭제<br>
+<br>
+●	관리자 페이지 : 영화 추가/수정/삭제<br>
+- 영화 목록 추가<br>
+- 영화 목록 수정, 삭제<br>
+<br>
+
+
 ![image](https://github.com/user-attachments/assets/71400657-0021-48ff-bd08-f2bfccfd1ed2)
 ![image](https://github.com/user-attachments/assets/fc07654c-3cfc-41ae-b8d2-e1decfdd692c)
 ![image](https://github.com/user-attachments/assets/9323e18d-3f17-4f88-9ca9-ff67c4472764)
@@ -31,8 +89,9 @@
 
 
 
+<br>
+<h2>화면 추가 설명</h2>
 
-화면 추가 설명
 ![회원가입](https://github.com/user-attachments/assets/dd78e190-dc60-4e1e-9227-ba4ae679ab7c)
 ![시큐리티설정](https://github.com/user-attachments/assets/8a0a1c3f-bd07-4858-a09e-1aee453917ac)
 ![아이디찾기](https://github.com/user-attachments/assets/764d2d92-af97-4dbe-80bf-d4c8546ac9ea)
